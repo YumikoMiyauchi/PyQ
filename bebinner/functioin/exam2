@@ -1,0 +1,30 @@
+# 西暦2000を和暦に変換する
+def convert_japanese_year(ad):
+    
+# 計算し、元号を付ける
+    if ad >= 1989:
+           wareki = '平成{}年'.format(ad - 1989 + 1)
+    elif ad >= 1926:
+            wareki = '昭和{}年'.format(ad - 1926+ 1)
+    elif ad >= 1912:
+            wareki = '大正{}年'.format(ad - 1912+ 1)
+    elif ad >= 1868:
+            wareki = '明治{}年'.format(ad - 1868+ 1)
+    else:
+            wareki = '明治以前'
+
+    return wareki
+
+
+    
+def main():
+    
+    wareki_2000 = convert_japanese_year(2000)
+    print('西暦2000年は', wareki_2000)
+
+    wareki_1975 = convert_japanese_year(1975)
+    print('西暦1975年は', wareki_1975)
+
+    
+if __name__ == '__main__':
+    main()
