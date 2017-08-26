@@ -1,0 +1,65 @@
+DISPLAY_SIZE_DICT = {
+    # 辞書のkeyに使用できるように、解像度のリストをタプルに変更する
+    '5': (320, 568),
+    'S6': (360, 640),
+    'N9': (360, 640),
+    'G3': (360, 640),
+    '6': (375, 667),
+    'N4': (384, 640),
+    '6+': (414, 736),
+}
+
+
+def main():
+    '''スマートフォンの機種と解像度を表示しつつ、同じ解像度のものが2つ以上あれば最後に表示'''
+    # 同じ解像度の機種数を、解像度をkeyにした辞書に格納
+    same_size_count_dict = {}
+
+    for smartphone_name, display_size in DISPLAY_SIZE_DICT.items():
+        # タプルの値をアンパックして受け取る
+        # ここにアンパックして受け取る処理とprint文でそれらを使う処理を書く
+
+        # 同じ解像度の機種数があればカウントアップ
+        if display_size in same_size_count_dict:
+            same_size_count_dict[display_size] += 1
+        else:
+            same_size_count_dict[display_size] = 1
+
+    print('同じ解像度の機種')
+    for display_size, same_size_count in same_size_count_dict.items():
+        if same_size_count >= 2:
+            print('{}: {}機種'.format(display_size, same_size_count))
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+タプル
+
+タプルはリストに似たシーケンス型です。要素の参照は、リストと同様にインデックス参照で行えます。
+
+a = (1, '2', True)
+print(a[0])  # 1 が表示される
+
+リストと違って、一度生成されたタプルは要素の変更や追加、削除が行えません。
+
+a[0] = 100  # TypeErrorが発生
+
+要素の値を上書きできない
+append()やinsert()、pop()の関数がない
+値を直接変更できない（イミュータブル）ため辞書のキーに使用できる
+TypeErrorの説明はこちらを参照してください
+
+アンパックによる代入
+
+シーケンス型であるタプルやリストの要素を複数の変数へ代入する際に、以下の書き方でまとめて代入できます。
+
+display_size = (360, 640)
+# アンパックによる代入
+width, height = display_size
+print(width)  # 360 と表示される
+print(height)  # 640 と表示される
