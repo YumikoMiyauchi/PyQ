@@ -1,0 +1,72 @@
+from string import ascii_uppercase
+
+ALLOW_CHARS = ' ' + ascii_uppercase  # ' ABCD....XYZ'
+
+
+def encrypt(value):
+    """文字列を受取り、暗号化して数字列を返します
+
+    :param str value: 暗号化の対象文字列
+    :return: 数字のリスト
+    :except ValueError: 予定外の文字がvalueに含まれている場合
+    """
+    nums = []  # 返値のリスト
+    for c in value:  # 文字列を1文字ずつ取り出してループ
+        n = ALLOW_CHARS.index(c.upper())  # 1文字を大文字にして、ALLOW_CHARSの何番目か調べる
+        nums.append(n)  # 何番目かを返値のリストに追加
+    return nums
+
+
+def input_loop():
+    while True:
+        value = input('文章を入力してください[A-Z,Space]:')
+        try:
+            nums = encrypt(value)
+        except ValueError:
+            print(value, 'はローマ字またはスペースではありません')
+        else:
+            print(*nums)
+        finally:
+            print('終了するにはCtrl-Cを入力してください')
+
+
+def main():
+    try:
+        input_loop()
+    except KeyboardInterrupt:
+        print('\nbye bye')
+
+
+if __name__ == '__main__':
+    main()
+    
+    
+    
+    
+チャット仲間と一緒に暗号メッセージを作って、それで会話することになりました。
+まずは簡単な暗号から始めることになり、ローマ字26文字を数字に置き換えて数字でメッセージを送ります。
+
+A=>1, B=>2, ... , Z=>26に置き換え、空白文字（スペース）を0に置き換えます。
+たとえばHELLO WORLDであれば、8 5 12 12 15 0 23 15 18 12 4に置き換えます。
+
+メッセージを送るときに暗号化を1文字ずつ考えるのが面倒なので、変換するプログラムを書きました。
+入力を間違えたときなどに、Pythonの例外メッセージが表示されるのを防ぎ、分かりやすいメッセージを表示するために例外処理を実装しましょう。
+
+
+プログラムの説明
+
+encrypt関数は、文字列をごく簡単な暗号に変換して返します。
+予定外の文字は変換できないので、ValueError例外が発生するとdocstringに書かれています
+（Pythonの関数ドキュメントのことをdocstringと呼びます。詳しい書き方は後のパートで紹介します）。
+
+input_loop関数は、利用者の文字列入力を待ち、それを暗号化して表示する処理を繰り返します。
+この関数内にあるwhile文は、条件を満たしている間ずっと、ブロック内の処理を繰り返し実行します。
+while True:は、条件がTrue（常に条件を満たす）ので、無限にループします。
+
+while文の詳細については、while文 を参照してください
+input()の詳細については、input()を参照してください
+main関数は、input_loop関数を実行します。
+もしKeyboardInterrupt例外が発生したら、それを捕まえて、メッセージを表示します。
+KeyboardInterrupt例外は、ユーザーがCtrlキーを押しながらCキーを押した場合（以下、Ctrl-C）に発生します。
+Ctrl-Cを入力すると、画面には^Cと表示されます。
+Ctrl-Cは、プログラムを強制停止したい場合に入力する特殊なコマンドで、Pythonに限らず一般的に使用されます。
