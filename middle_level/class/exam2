@@ -1,0 +1,46 @@
+from datetime import date, datetime
+
+
+class Product:
+    """商品用クラス"""
+    def __init__(self, name, release_date, price):
+        self.name = name
+        self.release_date = release_date 
+        self.price = price
+        
+    def is_released(self):
+        return self.release_date <= date.today()
+            
+    def print_info(self):
+        """詳細情報を表示する."""
+        if self.is_released():
+            released = '発売中'
+        else:
+            released = '発売前'
+        print('商品名:{} 発売日:{} 価格:{}円 ({})'.format(self.name,
+                                                 self.release_date,
+                                                 self.price,
+                                                 released))
+
+
+def main():
+    """メインの処理"""
+    # products.csvから情報を取得
+    products = []
+    with open('input/products.csv', encoding='utf-8') as f:
+        for row in f:
+            columns = row.rstrip().split(',')
+            name = columns[0]
+            release_date = datetime.strptime(columns[1], '%Y-%m-%d').date()
+            price = int(columns[2])
+            product = Product(name=name,
+                              release_date=release_date,
+                              price=price)
+            products.append(product)
+
+    for p in products:
+        p.print_info()
+
+
+if __name__ == '__main__':
+    main()
