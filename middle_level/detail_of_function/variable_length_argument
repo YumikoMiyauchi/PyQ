@@ -1,0 +1,73 @@
+# ここに可変長引数を設定します
+def create_card_args(name, job_title, mail, *args):
+    """argsを使った受け取りで名刺の内容を作成."""
+    card_items = []
+    card_items.append('株式会社ビープラウド')
+    card_items.append(job_title)
+    card_items.append(name)
+    card_items.append('MAIL: {}'.format(mail))
+    card_items.append('TEL: 03-9999-9999 FAX: 03-9999-9998')
+    card_items.append('URL: http://www.beproud.jp')
+
+    # 4つ目以降の引数はargsに入ります
+    for item in args:
+    # ここにargsを使った処理を書く
+        card_items.append(item)
+
+    return '\n'.join(card_items)
+
+
+def main():
+    # ここに可変長引数を使った関数呼び出し(4つ目以降の引数追加)を書く
+    jiro_info = create_card_args(
+        '高橋　二郎', 'マネージャー', 'jirou@beproud.jp', '趣味: 釣り')
+    print(jiro_info)
+
+    # ここに可変長引数を使った関数呼び出し(4つ目以降の引数追加)を書く
+    kaori_card = create_card_args(
+        '佐藤　香織', '営業', 'kaori@beproud.jp', '趣味: 編み物', '好きなお菓子: チョコレート')
+    print(kaori_card)
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+名刺情報作成プログラムを、追加の情報を可変長引数で渡せるように改修します。
+
+通常、関数に指定できる引数の数は決まっていますが、可変長引数を使うことでさらに多くの引数を指定できます。
+
+可変長引数を使うには*を変数名の前に付けます
+通常引数の数を超えた引数は可変長引数にタプルで入ります
+可変長引数は関数1つにつき1つだけ指定できます
+以下に簡単な例を示します。
+
+def create_card_args(name, job_title, mail, *args):
+    # 確認のためにargsに入ってきた値をprintします
+    for item in args:
+        print(item)
+
+
+# 必須引数であるname, job_title, mailの後に追加情報を指定
+create_card_args('佐藤', 'エンジニア', 'test@ex.com', '趣味: 読書', '座右の銘: 為せば成る')
+
+実行結果
+
+趣味: 読書
+座右の銘: 為せば成る
+
+渡したい追加情報をリストで持っている場合は、引数指定時に*をリスト変数名の前に付けることで展開して渡せます。
+以下のようなcreate_card_argsの呼び出しは上記と同じ結果になります。
+
+additional_info = ['趣味: 読書', '座右の銘: 為せば成る']
+create_card_args('佐藤', 'エンジニア', 'test@ex.com', *additional_info)
+
+実行結果
+
+趣味: 読書
+座右の銘: 為せば成る
+
+可変長引数の名前は、通常引数と同様のルールで自由に付けられますが、慣例でargsとされることが多いです。
+この後に学ぶキーワード可変長引数の慣例名kwargsも同様です。
+
