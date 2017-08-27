@@ -1,0 +1,46 @@
+from datetime import date
+from datetime import datetime
+
+
+class Member:
+    """会員用クラス"""
+
+    def __init__(self, name, birthday, mail):
+        """属性を初期化"""
+        self.name = name
+        self.birthday = datetime.strptime(birthday, '%Y-%m-%d').date()
+        self.mail = mail
+
+    # ここに年齢を計算するメソッドcalc_ageを追加
+    def calc_age(self):
+        """年齢を計算する"""
+        today = date.today()
+        # 年を利用し、年齢を計算
+        age = today.year - self.birthday.year
+    
+        # 比較用の日付作成（現在の年、誕生日の月、誕生日の日）
+        comp_birthday = date(today.year, self.birthday.month, self.birthday.day)
+       
+        # 現在と比較
+        if today < comp_birthday:
+            age -= 1
+        return age
+
+def main():
+    """メインの処理"""
+    members = []
+    with open('input/member.csv', encoding='utf-8') as f:
+        for row in f:
+            columns = row.rstrip().split(',')
+            col_name = columns[0]
+            col_birthday = columns[1]
+            col_mail = columns[2]
+            mm = Member(col_name, col_birthday, col_mail)
+            members.append(mm)
+
+    for member in members:
+        print(member.name + 'さんは' + str(member.calc_age()) + '歳です。')
+
+
+if __name__ == '__main__':
+    main()
