@@ -1,0 +1,58 @@
+from string import ascii_uppercase
+
+ALLOW_CHARS = ' ' + ascii_uppercase  # ' ABCD....XYZ'
+
+
+def encrypt(value):
+    """文字列を受取り、暗号化して数字列を返します
+
+    :param str value: 暗号化の対象文字列
+    :return: 数字のリスト
+    :except ValueError: 予定外の文字がvalueに含まれている場合
+    """
+    nums = []  # 返値のリスト
+    for c in value:  # 文字列を1文字ずつ取り出してループ
+        n = ALLOW_CHARS.index(c.upper())  # 1文字を大文字にして、ALLOW_CHARSの何番目か調べる
+        nums.append(n)  # 何番目かを返値のリストに追加
+    return nums
+
+
+def send_data(nums):
+    """将来的にはデータを送りたいけれど今はファイルに保存するだけ"""
+    with open('send.txt', 'wt', encoding='utf-8') as f:
+        f.write(nums)
+
+
+def input_loop():
+    while True:
+        value = input('文章を入力してください[A-Z,Space]:')
+        try:
+            nums = encrypt(value)
+            
+        except:
+            print(value, 'はローマ字またはスペースではありません')
+        else:
+            send_data(nums)
+            
+            
+
+def main():
+    input_loop()
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+例外が起こらなかった場合の処理は、以下のようにelse節に書きます
+try:
+    <1,例外が発生する可能性のある処理＞
+except:
+    <2,例外処理＞
+else:
+    <3,例外が起こらなかった場合に実行したい処理＞
+
+TypeError例外: 関数が期待するデータ型と異なる型の値を渡した場合に発生します
+この課題では、 TypeError: write() argument must be str, not list という例外が表示されています
+TypeError例外が発生した原因は、str型を期待しているwrite()関数にlist型の値を渡したためです
