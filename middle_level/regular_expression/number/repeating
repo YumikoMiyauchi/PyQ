@@ -1,0 +1,20 @@
+import re
+
+with open('input/location.csv', encoding='utf-8') as f:
+    for row in f:
+        row = row.strip()
+        columns = row.split(',')
+        station = columns[0]
+        post = columns[1] 
+        # ここから下に実装してください。
+        if not re.match('\d{3}-\d{4}$', post):
+            print(row)
+        
+        
+        
+        量指定子{n}: 直前の文字やパターンをn回繰り返した文字列にマッチします
+例: 1{4} は1が4回繰り返されている文字にマッチします。これは 1111 と同じです
+例: \d{3} は\dが3回繰り返されている文字にマッチします。これは \d\d\d と同じです
+
+繰り返し回数に幅がある場合、最小と最大を指定することもできます。
+\d{2,4} のように書くと、繰り返し回数が2回から4回の数字、つまり、2桁から4桁の数字にマッチします。
