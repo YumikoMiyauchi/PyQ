@@ -1,0 +1,19 @@
+"""出席者ファイルを取得する."""
+import os
+
+def search(target_path, search_text):
+    for name in os.listdir(target_path):
+        path = os.path.join(target_path, name)
+        
+        if os.path.isfile(path):
+            with open(path, encoding='utf-8') as f:
+                if search_text in f.read():
+                    print(name)
+if __name__ == '__main__':
+    search('answers', '出席')
+    
+    
+    
+    ディレクトリーanswers中にsato_0101.txtのように名前と日付がアンダースコア（_)区切りでファイル名となっているファイルが複数存在します。
+ファイルの中には出席か、欠席の文字が記載されています。
+出席と記載があるファイルの一覧を表示しましょう。
