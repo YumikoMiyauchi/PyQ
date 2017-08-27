@@ -1,0 +1,48 @@
+from datetime import date
+
+
+
+class User:
+    def __init__(self, user_id, first_name, last_name, birthday, email):
+        self.user_id = user_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.birthday = birthday
+        self.email = email
+    
+    def full_name(self):
+        return self.last_name + ' ' + self.first_name
+    
+    def is_birthday_month(self):
+        return self.birthday.month == date.today().month
+            
+    
+def main():
+    """メインの処理"""
+    # 会員を登録
+    user_1 = User(user_id=1,
+                  first_name='正洋',
+                  last_name='武藤',
+                  birthday=date(1972, 10, 23),
+                  email='muto@pyq.jp')
+
+    user_2 = User(user_id=2,
+                  first_name='真奈美',
+                  last_name='工藤',
+                  birthday=date(2002, 3, 2),
+                  email='kudo@pyq.jp')
+
+    # 会員番号と姓名を表示
+    print(user_1.user_id, user_1.full_name())
+    print(user_2.user_id, user_2.full_name())
+
+    # 誕生月かどうか確認
+    if user_1.is_birthday_month():
+        print(user_1.full_name() + 'さんに誕生日クーポンを送信')
+
+    if user_2.is_birthday_month():
+        print(user_2.full_name() + 'さんに誕生日クーポンを送信')
+
+
+if __name__ == '__main__':
+    main()
