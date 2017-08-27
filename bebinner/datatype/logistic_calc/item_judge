@@ -1,0 +1,11 @@
+def main():
+    with open('input/menu.csv', encoding = 'utf-8') as f:
+        for row in f:
+            row_s = row.rstrip().split(',')
+            name = row_s[0]
+            price = int(row_s[1])
+            if '弁当' in name and price < 400:
+                print('{}: {}円'.format(name, price))
+
+if __name__ == '__main__':
+    main()
