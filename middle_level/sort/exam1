@@ -1,0 +1,11 @@
+s_d = {}
+with open('input/book.csv', encoding='utf-8') as f:
+    for row in f:
+        co  = row.rstrip().split(',')
+        seat = co[1]
+        name = co[0]
+        s_d[seat] = name
+        
+sorted_s = sorted(s_d.items())
+for a ,b in sorted_s:
+    print(a,b)
