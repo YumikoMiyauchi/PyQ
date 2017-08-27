@@ -1,0 +1,19 @@
+breads = {
+    'アンパン': 200,
+    '食パン': 150,
+    'カレーパン': 300,
+    'メロンパン': 220
+}
+
+
+def main():
+    """メインの処理."""
+    total = 0
+    for k in breads.values():
+        total += k
+    average = total / len(breads)
+    print('平均価格は{:.1f}円です。'.format(average))
+
+
+if __name__ == '__main__':
+    main()
