@@ -1,0 +1,53 @@
+def output_schedule(work_time_list, holiday, work_time_capacity):
+    '''家庭教師アルバイトの予定を出力します'''
+    day_list = ['月', '火', '水', '木', '金', '土', '日']
+    # 勉強する教科
+    subject_list = ['国語', '数学', '英語', '社会', '理科']
+
+    # ここにenumerateを使った処理を書きます
+    for index, day in enumerate(day_list, start=1):
+        print('{}日目は{}曜日です'.format(index, day))
+
+    total_work_time = 0
+    # ここにzipを使った処理を書きます
+    for day, work_time in zip(day_list, work_time_list):
+        # もし休日なら労働時間を加算しないで次の日の
+        if day == holiday:
+            print('{}曜日はお休みです'.format(day))
+            # ここにbreakかcontinueを書きます
+            continue
+
+        print('{}曜日の勤務時間: {}時間'.format(day, work_time))
+
+        # ここにrange()を使った処理を書きます
+        for index in range(work_time):
+            # 1時間毎に別の教科を教えます
+            subject_index = (total_work_time + index) % len(subject_list)
+            print('- {}教科目:{}'.format(index + 1, subject_list[subject_index]))
+
+        # 労働時間を加算
+        total_work_time += work_time
+
+        # 加算後に12時間以上働いていたらその週はもう働かない
+        if total_work_time >= work_time_capacity:
+            print('今週はこれ以上働けません')
+            # ここにbreakかcontinueを書きます
+            break
+
+    print('今週の勤務予定時間: {}時間'.format(total_work_time))
+
+
+def main():
+    '''アルバイトする人の情報をoutput_scheduleに渡します'''
+    # 1日に何時間働けるかのリスト
+    work_time_list = [3, 5, 2, 4, 2, 5, 4]
+    # 相手側のお休みの日
+    holiday = '木'
+    # 合計労働時間がこの時間を超えたらその週は働かない
+    work_time_capacity = 12
+
+    output_schedule(work_time_list, holiday, work_time_capacity)
+
+
+if __name__ == '__main__':
+    main()
