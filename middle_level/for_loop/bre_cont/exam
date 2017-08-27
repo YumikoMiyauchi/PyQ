@@ -1,0 +1,28 @@
+def main():
+    # 1日に何時間働けるかのリスト
+    work_time_list = [3, 5, 2, 4, 2, 5, 4]
+    # 合計労働時間がこの時間を超えたらその週は働かない
+    work_time_capacity = 12
+
+    # 合計労働時間を加算する変数
+    total_work_time = 0
+    for work_time in work_time_list:
+        # 労働時間が3時間以下の日は休むことにして、それ以降の処理をスキップ
+        if work_time <= 3:
+            continue
+
+        print('勤務時間: {}時間'.format(work_time))
+
+        # 労働時間を加算
+        total_work_time += work_time
+
+        # 加算後に12時間以上働いていたらその週はもう働かない
+        if total_work_time >= work_time_capacity:
+            print('今週はこれ以上働けません')
+            break
+
+    print('今週の勤務予定時間: {}時間'.format(total_work_time))
+
+
+if __name__ == '__main__':
+    main()
