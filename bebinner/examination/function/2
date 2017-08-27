@@ -1,0 +1,15 @@
+#greeting.py
+def print_morning():
+    print('Morning')
+
+
+def say_hello(name):
+    print('Hello,', name)
+
+
+#main.py
+# 実行
+from greeting import print_morning
+from greeting import say_hello
+say_hello('Bob')
+print_morning()
