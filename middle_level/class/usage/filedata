@@ -1,0 +1,35 @@
+class Menu:
+    """ランチメニュー用クラス"""
+
+    def __init__(self, name, price):
+        """初期値設定
+
+        name: メニュー名
+        price: 価格
+        """
+        self.name = name
+        self.price = price
+
+
+def main():
+    """メインの処理"""
+    menus = []
+    with open('input/menu.csv', encoding='utf-8') as f:
+        for row in f:
+            co = row.rstrip().split(',')
+            co_name = co[0]
+            co_price = co[1]
+            menu = Menu(co_name, co_price)
+            menus.append(menu)
+            
+    print('# 正規価格')
+    for mm in menus:
+        print(mm.name + 'は' + str(mm.price) + '円')
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+ファイルから取り出したデータをクラスのインスタンスとして扱うことによりデータをまとまりとして扱いやすくなります。
