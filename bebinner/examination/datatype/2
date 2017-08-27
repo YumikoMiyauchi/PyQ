@@ -1,0 +1,13 @@
+def main():
+    with open('input/zoo.csv', encoding='utf-8') as f:
+        for row in f:
+            columns = row.rstrip().split(',')
+            address = columns[0]
+            name = columns[1]
+            a = int(columns[2])
+            c = int(columns[3])
+            if address == '東京' and (a == 0 and c == 0):
+                print(name)
+
+if __name__ == '__main__':
+    main()
