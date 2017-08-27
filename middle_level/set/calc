@@ -1,0 +1,67 @@
+def can_receive_order(annken_skills, team_skills):
+    '''案件を受けられるか判断する
+    チームでのスキルが案件で必要なスキルをすべて含んでいれば受けられる'''
+    # ここに部分集合を用いた処理を書く
+    if annken_skills <= team_skills:
+        print('受けられます')
+    else:
+        print('受けられません')
+
+
+def main():
+    # 業務で使えるスキルセットを用いて集合演算をします（和・積・差・対称差）
+    tarou_skills = {'html', 'CSS', 'Python'}
+    jirou_skills = {'html', 'CSS', 'JavaScript'}
+
+    # 2人のスキルを合わせたもの（ここに集合の和演算を書く）
+    print('2人のスキルを合わせたもの: {}'.format(tarou_skills | jirou_skills))
+    # 2人のスキルに共通するもの（ここに集合の積演算を書く）
+    print('2人のスキルに共通するもの: {}'.format(tarou_skills & jirou_skills))
+    # 太郎にだけあるスキル（ここに集合の差演算を書く）
+    print('太郎にだけあるスキル: {}'.format(tarou_skills - jirou_skills))
+    # 2人のうち、どちらかしか持っていないスキル（ここに集合の対象差演算を書く）
+    print('2人のうち、どちらかしか持っていないスキル: {}'.format(tarou_skills ^ jirou_skills))
+
+    # 部分集合を用いて、以下の案件が受けられるかを判断してみる
+    required_web = {'html', 'JavaScript', 'Python'}
+    required_ios = {'html', 'CSS', 'Swift'}
+
+    team_skills = tarou_skills | jirou_skills
+
+    print('WEBの案件は')
+    can_receive_order(required_web, team_skills)
+
+    print('iOSの案件は')
+    can_receive_order(required_ios, team_skills)
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+解説
+
+和（union）
+積（intersection）
+差（difference）
+対称差（symmetric difference）
+部分集合（subset）かの判定
+>>> {1, 2, 3} | {2, 3, 4}  # 和
+{1, 2, 3, 4}
+>>> {1, 2, 3} & {2, 3, 4}  # 積
+{2, 3}
+>>> {1, 2, 3} - {2, 3, 4}  # 差
+{1}
+>>> {1, 2, 3} ^ {2, 3, 4}  # 対象差
+{1, 4}
+
+# 部分集合かの判定
+# 左辺の要素すべてが右辺の集合に含まれている場合
+>>> print({1, 3} <= {1, 2, 3})
+True
+# 左辺の要素すべてが右辺の集合に含まれていない場合
+>>> print({1, 4} <= {1, 2, 3})
+False
