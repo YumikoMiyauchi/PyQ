@@ -1,0 +1,12 @@
+employees = []
+with open('input/employees.csv', encoding='utf-8') as f:
+    for row in f:
+        co  = row.rstrip().split(',')
+        num = co[0]
+        name = co[1]
+        n = num + '_' + name
+        employees.append(n)
+        
+s_mem = sorted(employees)
+for n in s_mem:
+    print(n)
