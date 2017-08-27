@@ -1,0 +1,25 @@
+employees = {101: '田中',
+             102: '鈴木',
+             103: '佐藤',
+             104: '高橋',
+             105: '山本'}
+
+
+def main():
+    employee_ids = [101, 105, 109]
+    for employee_id in employee_ids:
+        name = employees.get(employee_id)
+        # この下に処理を記述します
+        if name is None:
+            print('社員番号{}の社員はいません'.format(employee_id))
+        else:
+            print('社員番号{}は{}さんです'.format(employee_id, name))
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+Noneはある値を期待して関数を呼び出した時に期待されている値が無い場合に返されます。
+辞書.get(値)は辞書のキーに引数の値が存在すると値を返し、存在しない場合はNoneを返します。
