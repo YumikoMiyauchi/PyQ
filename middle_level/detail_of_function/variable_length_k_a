@@ -1,0 +1,47 @@
+# ここにキーワード可変長引数を設定します
+def create_card_kwargs(name, job_title, mail, **kwargs):
+    """kwargsを使った受け取りで名刺の内容を作成."""
+    card_items = []
+    card_items.append('株式会社ビープラウド')
+    card_items.append(job_title)
+    card_items.append(name)
+    card_items.append('MAIL: {}'.format(mail))
+    card_items.append('TEL: 03-9999-9999 FAX: 03-9999-9998')
+    card_items.append('URL: http://www.beproud.jp')
+
+    # ここにキーワード可変長引数を使った処理を書きます
+    for k, v in kwargs.items():
+        card_items.append('{}: {}'.format(k, v))
+
+    return '\n'.join(card_items)
+
+
+def main():
+    employee_list = [
+        {
+            'name': '高橋　二郎',
+            'job_title': 'マネージャー',
+            'mail': 'jirou@beproud.jp',
+            '趣味': '釣り',
+            '好きなお菓子': 'せんべい'
+        },
+        {
+            'name': '佐藤　香織',
+            'job_title': '営業',
+            'mail': 'kaori@beproud.jp',
+            '趣味': '編み物',
+            '好きなお菓子': 'チョコレート',
+        },
+    ]
+
+    for employee_info in employee_list:
+        # ここにキーワード可変長引数を使った処理を書きます
+        data =create_card_kwargs(**employee_info)
+        print(data)
+
+
+if __name__ == '__main__':
+    main()
+
+
+渡したい追加情報を辞書で持っている場合は、引数指定時に**を辞書変数名の前に付けることで展開して渡せます。
