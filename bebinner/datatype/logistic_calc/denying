@@ -1,0 +1,17 @@
+def is_kanto(address):
+    kanto = ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県']
+    return address in kanto
+
+
+def main():
+    members = [
+        {'name': 'サトシ', 'age': 13, 'address': '東京都'},
+        {'name': 'ハジメ', 'age': 25, 'address': '千葉県'},
+        {'name': 'サチコ', 'age': 33, 'address': '福井県'}
+    ]
+    for m in members:
+        if not is_kanto(m['address']):
+            print('{}は関東在住ではありません。'.format(m['name']))
+
+if __name__ == '__main__':
+    main()
