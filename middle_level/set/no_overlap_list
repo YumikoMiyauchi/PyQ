@@ -1,0 +1,32 @@
+# 機種名をkey、解像度の(幅, 高さ)をタプルでvalueに持つ辞書
+DISPLAY_SIZE_DICT = {
+    '5': (320, 568),
+    'S6': (360, 640),
+    'N9': (360, 640),
+    'G3': (360, 640),
+    '6': (375, 667),
+    'N4': (384, 640),
+    '6+': (414, 736),
+}
+
+
+def main():
+    '''DISPLAY_SIZE_DICTが持つ重複しない解像度の種類と値を、解像度の幅で昇順ソートして表示'''
+    display_size_list = DISPLAY_SIZE_DICT.values()
+
+    # ここにsetを使って解像度の重複をなくす処理を書く
+    display_sizes = set(display_size_list)
+    # 重複がないので display_sizesの長さ == 解像度の種類数になる
+    print('解像度は{}種類です'.format(len(display_sizes)))
+
+    # 解像度の第一要素(幅)でソートして表示する
+    for display_size in sorted(display_sizes):
+        print(display_size)
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+setの要素はタプルや文字列、数字のようにイミュータブル（値を直接変更できない）である必要があります。リストや辞書は使えません
