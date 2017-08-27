@@ -10,3 +10,14 @@ if __name__ == '__main__':
 
 
 指定したディレクトリーの中の全ファイルをリストで戻すos.listdir()を利用しましょう。
+
+
+return
+
+
+a
+b
+c
+x.txt
+y.txt
+z.txt
