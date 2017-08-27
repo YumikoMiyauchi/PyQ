@@ -1,0 +1,16 @@
+import os
+
+def directory_list(target_path):
+    for name in os.listdir(target_path):
+        direc = os.path.join(target_path, name)
+        print(direc)
+        
+    
+    
+
+
+if __name__ == '__main__':
+    directory_list('input/a')
+
+
+パスの結合には、 os.join() を利用しましょう。
