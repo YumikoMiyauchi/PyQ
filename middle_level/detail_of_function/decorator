@@ -1,0 +1,76 @@
+from time import time
+
+
+# ここにデコレータを書きます
+def time_it(func):
+    def _wrapped(*args, **kwargs):
+
+        # 計測開始
+        start_time = time()
+        # ここにデコレートした関数を実行する処理を書きます
+        result = func(*args, **kwargs)
+        # 計測終了
+        end_time = time()
+
+        # 実行時間をミリ秒単位で持つ
+        exec_time_ms = (end_time - start_time) * 1000
+
+        print('(実行時間は{:.6}msです)'.format(exec_time_ms))
+        # ここにラップした関数を戻す処理を書きます
+        return result
+
+    return _wrapped
+
+
+# ここにデコレータを設定します
+
+@time_it
+def is_in_container(sequence, target):
+    return target in sequence
+
+
+def main():
+    thousand_length_list = list(range(1, 1000 + 1))
+
+    print('- リストの場合')
+    is_in_container(thousand_length_list, 1000)
+    print('- setの場合')
+    # ここでthousand_length_listをsetに変換します
+    thousand_length_set = set(thousand_length_list)
+    is_in_container(thousand_length_set, 1000)
+
+
+if __name__ == '__main__':
+    main()
+    
+    
+    
+    関数の実行時間を計測するデコレータを作成し、リストとsetで要素の探索速度が違うことを確認します。
+
+time_itデコレータは関数の実行時間を計測し、出力します
+is_in_container関数は引数sequenceに引数targetが含まれるかを判定した値を返します
+is_in_container関数にtime_itデコレータを設定し、実行時間を計測します
+リストは最初の要素から探索されるため、後方の要素や存在しない要素では探索に時間がかかることを確認しましょう
+inで要素を探す場合、実装の都合で集合のほうがリストよりも実行が速いことを確認しましょう
+
+
+解説
+
+デコレータtime_itを設定したことで、リストと集合の探索実行時間の違いを計測できました。
+
+デコレータは関数をラップすることで、元の関数は変更しないで前後に処理を挟んだり返す値を変更したりできます。
+time_itでは、関数実行前と実行後にtime()で現在時刻を取得しておき、それらの差を求めることで関数の実行時間を計測しています。
+
+デコレータの書式
+
+def デコレータ名(func):
+    def ラップ関数名(*args, **kwargs):
+        funcを用いたなんらかの動作
+        return
+
+    return ラップ関数名
+
+デコレータは以下のように設定します。
+
+@デコレータ名
+def デコレータが設定される関数名():
