@@ -1,0 +1,20 @@
+"""上半期の売上の平均を求める"""
+
+
+def main():
+    # この下に処理を記述します
+    s_sum = 0
+    with open('input/sales.csv', encoding='utf-8') as f:
+        for row in f:
+            columns = row.rstrip().split(',')
+            month = int(columns[0])
+            sale = int(columns[1])
+            if 1 <= month <=6:
+                s_sum += sale
+    
+    print('1月から6月までの月売上の平均は{:,.2f}円です。'.format(s_sum*1000/6))
+            
+
+
+if __name__ == '__main__':
+    main()
