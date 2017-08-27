@@ -1,0 +1,18 @@
+import os
+
+
+def search(target_path, search_file):
+    path = os.path.join(target_path, search_file)
+    if os.path.isdir(path):
+        print('{}はディレクトリーです。'.format(path))
+    if os.path.isfile(path):
+        print('{}はファイルです。'.format(path))
+
+
+def main():
+    search('input', 'c')
+    search('input', 'd')
+
+
+if __name__ == '__main__':
+    main()
