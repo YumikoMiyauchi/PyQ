@@ -1,0 +1,32 @@
+import os
+
+def directory_tree(target_path):
+    for root, dirs, files in os.walk(target_path):
+        print(root)
+        for dir in dirs:
+            print('\t', dir)
+        for file in files:
+            print('\t',file)
+if __name__ == '__main__':
+    directory_tree('input')
+
+
+指定したディレクトリーの中の小ディレクトリーも入れた全ファイルをリストで戻すos.walk()を利用しましょう。
+
+return
+
+input
+     a
+     b
+     c
+     x.txt
+     y.txt
+     z.txt
+input/a
+     a_x.txt
+     a_y.txt
+input/b
+     b_y.txt
+     b_z.txt
+input/c
+     c_z.txt
