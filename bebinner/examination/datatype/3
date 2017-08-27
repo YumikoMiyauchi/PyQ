@@ -1,0 +1,22 @@
+def main():
+    total = 0
+    with open('input/sales.csv', encoding='utf-8') as f:
+        for row in f:
+            columns = row.rstrip().split(',')
+            month = int(columns[0])
+            sale = int(columns[1])
+            if 1<=month<=6:
+                total += sale
+        
+    average = total/6*1000
+        
+    print('1月から6月までの月売上の平均は{:,.2f}円です。'.format(average))
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+#外部データから読み込んだ数値データはstr型からint型or float型に変換して計算する必要がある
