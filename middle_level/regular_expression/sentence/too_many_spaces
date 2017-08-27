@@ -1,0 +1,21 @@
+import re
+
+with open('input/bento.csv', encoding='utf-8') as f:
+    for row in f.readlines()[:10]:
+        columns = row.rstrip().split(',')
+        shop_col = columns[1]
+
+        # ここから下に実装してください。
+        shop = re.split('\s*[/／\t]+\s*', shop_col)
+        for s in shop:
+            print(s)
+            
+            
+            
+            メタ文字\s: 空白文字にマッチします
+量指定子*: 直前の文字やパターンが0個以上繰り返す文字列にマッチします
+abc\s*def はabcdefやabc defにマッチします
+abc12*def はabc1defやabc12def, abc122222defにマッチします
+
+
+\s* はとてもよく使われるパターンです。連続するスペース全てとマッチしますが、スペースがなくても良い場合に使われます。
