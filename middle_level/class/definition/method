@@ -1,0 +1,31 @@
+class Book:
+    """書籍管理用クラス"""
+
+    def __init__(self, title, author, price):
+        """属性を初期化"""
+        self.title = title
+        self.author = author
+        self.price = price
+
+    def book_info(self):
+        """タイトル、著者と価格の文字列を作成"""
+        return self.title + '[' + self.author + ']:' + str(self.price) + '円'
+
+    # ここにメソッドsaleを追加します
+    def sale(self,percent):
+        return int(self.price * (100-percent)/100)
+
+def main():
+    """メインの処理"""
+    # インスタンスの作成
+    book_1 = Book('天才', '石原 慎太郎', 1206)
+
+    # メソッドの利用
+    print(book_1.book_info())
+
+    # 割引価格計算
+    print('2割引:' + str(book_1.sale(20)) + '円')  # 2割引後の価格が表示される
+
+
+if __name__ == '__main__':
+    main()
