@@ -1,0 +1,27 @@
+def main():
+    # 1日に何時間働けるかのリスト
+    work_time_list = [3, 5, 2, 4, 2, 5, 4]
+
+    # 合計労働時間を加算する変数
+    total_work_time = 0
+    for work_time in work_time_list:
+        # 労働時間が3時間以下の日は休むことにして、それ以降の処理をスキップ
+        if work_time <= 3:
+            # ここにcontinueを書きます
+            continue
+
+        print('勤務時間: {}時間'.format(work_time))
+
+        # 労働時間を加算
+        total_work_time += work_time
+
+    print('今週の勤務予定時間: {}時間'.format(total_work_time))
+
+
+if __name__ == '__main__':
+    main()
+    
+    
+    
+continueはfor文ブロックで、現在の要素の処理をスキップして次の要素の処理に移るための命令です
+ifとともに使い、条件に当てはまった場合処理を中断して次の要素に移行する
