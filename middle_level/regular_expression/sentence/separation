@@ -1,0 +1,18 @@
+import re
+
+with open('input/bento.csv', encoding='utf-8') as f:
+    for row in f.readlines()[:10]:
+        columns = row.rstrip().split(',')
+        shop_col = columns[1]
+
+        # ここから下に実装してください。
+        shops = re.split('/', shop_col)
+        for s in shops:
+            print(s)
+            
+            
+            
+            特定の文字で文字列を分割するのにも re.split を使用できます
+re.split(pattern, string) のように、第1引数は分割に使う文字列パターン、第2引数は対象の文字列データを指定します
+re.split は、分割できない場合にもリストを返します。例: re.split('-', 'hello') は ['hello'] を返します
+これだけであれば、str.splitの方が簡単に書けます
