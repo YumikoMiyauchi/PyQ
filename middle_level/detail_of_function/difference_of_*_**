@@ -1,0 +1,22 @@
+# 引数を指定しない場合
+print_args()
+# Positional arguments: ()
+# Keyword arguments: {}
+
+# 位置引数のみ指定した場合
+print_args(1,2,3)
+# Positional arguments: (1, 2, 3)
+# Keyword arguments: {}
+
+# キーワード引数のみ指定した場合
+print_args(name="Yohei", age=30)
+# Positional arguments: ()
+# Keyword arguments: {'name': 'Yohei', 'age': 30}
+
+# 位置引数とキーワード引数を共に指定した場合
+print_args(1, 2, 3, name="Yohei", age=30)
+# Positional arguments: (1, 2, 3)
+# Keyword arguments: {'name': 'Yohei', 'age': 30}
+
+引数単体→＊
+キーワードと＝でつながれた引数→＊＊
