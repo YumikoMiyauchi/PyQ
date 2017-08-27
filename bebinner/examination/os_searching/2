@@ -1,0 +1,34 @@
+# coding: utf-8
+import os
+
+
+def search(target_path, text):
+    """ここにコードを書いていきましょう"""
+    if not os.path.exists(target_path):
+        print('指定したパスが存在しません')
+        return
+    
+    if not os.path.isdir(target_path):
+        print('パスにはディレクトリーを指定してください')
+        return
+    
+    for root, dirs, files in os.walk(target_path):
+        for name in files:
+            path = os.path.join(root, name)
+            if os.path.isfile(path):
+                with open(path, encoding='utf-8') as f:
+                    words = f.read()
+                    if text in words:
+                        print(path)
+    
+
+if __name__ == '__main__':
+    search('notes', '雪')
+
+
+
+ファイルの中を読み込む場合は open 関数で開いたファイルを read 関数で読み込みます。
+この時 with というコンテキストを使うことが推奨されています。
+
+
+
