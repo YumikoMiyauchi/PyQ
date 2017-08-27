@@ -1,0 +1,42 @@
+def output_schedule(work_time_list):
+    '''家庭教師アルバイトの予定を出力します'''
+    day_list = ['月', '火', '水', '木', '金', '土', '日']
+
+    total_work_time = 0
+    # ここにzipを使ったfor文を書きます
+    for day, work_time in zip(day_list, work_time_list):
+        print('{}曜日の勤務時間: {}時間'.format(day, work_time))
+
+        # 労働時間を加算
+        total_work_time += work_time
+
+    print('今週の勤務予定時間: {}時間'.format(total_work_time))
+
+
+def main():
+    '''アルバイトする人の情報をoutput_scheduleに渡します'''
+    # 1日に何時間働けるかのリスト
+    work_time_list = [3, 5, 2, 4, 2, 5, 4]
+
+    output_schedule(work_time_list)
+
+
+if __name__ == '__main__':
+    main()
+    
+    
+    
+for リスト1の要素, リスト2の要素 in zip(リスト1, リスト2):
+
+zip()
+
+引数から要素を集めたイテレータを作ります。説明のために簡単な例を見てみましょう。
+
+str_list = ['a', 'b', 'c']
+int_list = [1, 2, 3]
+zipped_list = list(zip(str_list, int_list))
+print(zipped_list)  # 結果は[('a', 1), ('b', 2), ('c', 3)]
+
+要素を2つのタプルにまとめたリストで返ってきていることが分かります。
+for文で使うと、ループごとに要素を2つ受け取って処理を進めていきます。
+zip関数の引数は、3つ以上指定できます。
