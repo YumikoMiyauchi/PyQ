@@ -1,0 +1,24 @@
+import re
+
+with open('input/bento.csv', encoding='utf-8') as f:
+    for row in f:
+        columns = row.rstrip().split(',')
+        shop_col = columns[1]
+
+        # ここから下に実装してください。
+        shops = re.split('\s*[/／\t]+\s*', shop_col)
+        for s in shops:
+            name = s.split('、')[1]
+            if re.match('[あ-ん]+$',name):
+                print(name)
+                
+                
+             
+            
+            
+ 文字クラス[a-c]: ハイフンで指定された範囲の文字のどれにでもマッチします
+[a-c]123と書くと、 a123, b123, c123 のどれにでもマッチします
+[a-cz]123と書くと、 a123, b123, c123, z123 のどれにでもマッチします
+[0-9]abc$は\dabc$と同じで、数字1文字に続けて文字abcで終わる4文字のtextにマッチします
+文字クラス[あ-ん]:「文字の範囲」は英数字以外に平仮名などにも適用されます
+[あ-ん]+$は、1文字以上の任意の平仮名だけで構成された文字列にマッチします
