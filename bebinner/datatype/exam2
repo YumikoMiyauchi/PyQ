@@ -1,0 +1,58 @@
+from datetime import datetime
+
+
+def sales_data():
+    """売上データを取得."""
+    result = []
+    with open('input/report.txt', encoding='utf-8') as f:
+        for row in f:
+            columns = row.rstrip().split(',')
+            sale_date = datetime.strptime(columns[0], '%Y-%m-%d %H:%M:%S')
+            name = columns[1]
+            price = int(columns[2])
+            new_data = {'sale_date': sale_date,
+                        'name': name,
+                        'price': price}
+            result.append(new_data)
+
+    return result
+
+
+def total_sales_data(year, month):
+    """売上データの集計."""
+    s_data = sales_data()
+    # この下に処理を記述します
+    sale = 0
+    count = 0
+    s_dict = {}
+    for data in s_data:
+        sale_date = data['sale_date']
+        price = data['price']
+        item_name = data['name']
+        if sale_date.year == year and sale_date.month == month:
+            sale += data['price']
+            count += 1
+            if item_name in s_dict:
+                s_dict[item_name]['total'] += data['price']
+                s_dict[item_name]['count'] += 1
+            else:
+                s_dict[item_name] = {'total': data['price'], 'count': 1}
+    return count, sale, s_dict
+        
+
+def main():
+    """メインの処理."""
+    r_count, r_total, r_dict= total_sales_data(2015, 7)
+    print('売上金額: {:,d}円'.format(r_total))
+    print('販売個数: {:d}個'.format(r_count))
+    print('顧客単価: {:.2f}円'.format(r_total/r_count))
+    print('')
+    print('-- 詳細 --')
+    for s, v in r_dict.items():
+        rate = v['count']/r_count*100
+        print('{:s}: 販売個数 {:d}個, 割合 {:.1f}%'.format(s,v['count'] , rate))
+    
+
+
+if __name__ == '__main__':
+    main()
