@@ -1,0 +1,20 @@
+def main():
+    # 1日に何時間働けるかのリスト
+    work_time_list = [3, 5, 2, 4, 2, 5, 4]
+
+    # ここにenumerateを用いたfor文を書きます
+    for index, x in enumerate(work_time_list, start=1):
+        print('{}日目の勤務予定: {}時間'.format(index, x))        
+
+if __name__ == '__main__':
+    main()
+
+
+
+for index, x in enumerate(['a', 'b', 'c']):
+    print(index, x)
+    
+  
+0 a
+1 b
+2 c
