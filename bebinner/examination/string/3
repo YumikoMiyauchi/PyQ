@@ -1,0 +1,10 @@
+def main():
+    """メインの処理."""
+    with open('input/reservation.csv', encoding='utf-8') as f:
+        for row in f:
+            if row.startswith('高橋'):
+                print(row.rstrip())
+
+
+if __name__ == '__main__':
+    main()
