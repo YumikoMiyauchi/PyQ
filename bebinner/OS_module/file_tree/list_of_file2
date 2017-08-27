@@ -1,0 +1,11 @@
+import os
+
+def directory_tree(target_path):
+    for root, dirs, files in os.walk(target_path):
+        
+        for name in files:
+            path = os.path.join(root, name)
+            print(path)
+    
+if __name__ == '__main__':
+    directory_tree('input')
