@@ -1,0 +1,15 @@
+import re
+
+with open('input/location.csv', encoding='utf-8') as f:
+    for row in f:
+        row = row.strip()
+        columns = row.split(',')
+        station = columns[0]
+        post = columns[1] 
+        # ここから下に実装してください。
+        if not re.match('\d{3}-?\d{4}$', post):
+            print(row)
+            
+            
+            量指定子?: 特定の文字を0回または1回出現する場合にマッチするパターンを?で指定します
+例: 12-?34 は1234と12-34にマッチします
