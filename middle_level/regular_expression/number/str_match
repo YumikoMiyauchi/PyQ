@@ -1,0 +1,21 @@
+import re
+
+with open('input/location.csv', encoding='utf-8') as f:
+    for row in f:
+        row = row.strip()
+        columns = row.split(',')
+        station = columns[0]
+        sta = post = columns[1]
+        
+        # ここから下に実装してください。
+        if re.match('103-0003$',post):
+            print(station)
+            
+            
+固定の文字列を検索するのにも re.match を使用できます
+re.match(pattern, string) のように第1引数に検索したい文字列パターン、第2引数に対象の文字列データを指定します
+re.match メソッドは、第2引数に指定された文字列データの先頭から一致するかチェックします
+re.match メソッドに指定したpattern以外の文字がstringに含まれていて欲しくない場合は、文字の終端にマッチするメタ文字 $ を指定します
+re.match メソッドは、マッチしない場合、Noneを返します
+
+メタ文字$: 末尾の文字にマッチします
