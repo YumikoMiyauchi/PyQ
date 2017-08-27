@@ -1,0 +1,28 @@
+# ここにMenuクラスを作成します
+class Menu:
+    
+    def __init__(self, name, price):
+        self.name = name 
+        self.price = price
+     
+    def discount20(self):
+        """20%割引の価格を表示する"""
+        return int(self.price * 0.8)        
+
+                
+
+
+def main():
+    """メインの処理"""
+    menu_1 = Menu('のり弁', 350)
+    menu_2 = Menu('シャケ弁', 400)
+
+
+        
+    print(menu_1.name + 'は' + str(menu_1.discount20())
+                 + '円（通常：' + str(menu_1.price) + '円）')
+    print(menu_2.name + 'は' + str(menu_2.discount20())
+                  + '円（通常：' + str(menu_2.price) + '円）')
+
+if __name__ == '__main__':
+    main()
