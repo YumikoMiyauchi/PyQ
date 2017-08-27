@@ -1,0 +1,22 @@
+def is_kanto(address):
+    kanto = ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県']
+    return address in kanto
+
+
+def is_kansai(address):
+    kansai = ['大阪府', '京都府', '兵庫県', '滋賀県', '奈良県', '和歌山県']
+    return address in kansai
+
+
+def main():
+    members = [
+        {'name': 'サトシ', 'age': 13, 'address': '東京都'},
+        {'name': 'ハジメ', 'age': 25, 'address': '千葉県'},
+        {'name': 'サチコ', 'age': 33, 'address': '福井県'}
+    ]
+    for m in members:
+        if is_kanto(m['address']) or is_kansai(m['address']):
+            print('{}は関東在住か、関西在住'.format(m['name']))
+
+if __name__ == '__main__':
+    main()
