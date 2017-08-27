@@ -1,0 +1,17 @@
+import re
+
+with open('input/location.csv', encoding='utf-8') as f:
+    for row in f:
+        row = row.strip()
+        columns = row.split(',')
+        station = columns[0]
+        post = columns[1]
+        
+        # ここから下に実装してください。
+        if not re.match('\d{3}-?\d{2}(\d{2})?$', post):
+            print(row)
+            
+            
+    
+量指定子を2つ組み合わせて使うには()で括ります
+例: 66(7{2})? は 6677 または 66 にマッチします
