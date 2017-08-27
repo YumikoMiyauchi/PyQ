@@ -1,0 +1,19 @@
+def main():
+    with open('input/zoo.csv', encoding = 'utf-8') as f:
+        for row in f:
+            row_s = row.rstrip().split(',')
+            pref = row_s[0]
+            zoo = row_s[1]
+            price_a = int(row_s[2])
+            price_c = int(row_s[3])
+            if pref == '神奈川' and (price_a <= 500 or price_c == 0):
+                print(zoo, price_a, price_c)
+
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+たとえば、==での比較のほうが、andよりも先に実行されています。論理演算子も複数組み合わせることができますが、可読性がよくなるようにカッコ()を利用しましょう。
