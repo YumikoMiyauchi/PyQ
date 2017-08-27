@@ -1,0 +1,12 @@
+import os
+
+def directory_list(target_path):
+    for name in os.listdir(target_path):
+        print(name)
+    
+if __name__ == '__main__':
+    directory_list('input')
+
+
+
+指定したディレクトリーの中の全ファイルをリストで戻すos.listdir()を利用しましょう。
