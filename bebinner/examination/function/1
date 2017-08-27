@@ -1,0 +1,18 @@
+# 関数minmaxを定義します
+def minmax(x, y, z):
+    """3つの値の最小値と最大値を戻す."""
+    max = x
+    min = x
+    for a in [y, z]:
+        if max < a:
+            max = a
+        if min > a:
+            min = a
+    return min, max
+
+
+min1, max1 = minmax(100, 200, 300)
+print(min1, max1)
+
+min2, max2 = minmax(444, 33, 222)
+print(min2, max2)
