@@ -1,0 +1,39 @@
+class Menu:
+    """ランチメニュー用クラス"""
+
+    def __init__(self, name, price):
+        """初期値設定
+
+        name: メニュー名
+        price: 価格
+        """
+        self.name = name
+        self.price = price
+
+    # 半額の価格を返すメソッドdiscount50を追加します。
+    def discount50(self):
+        return int(self.price * 0.5)
+
+def main():
+    """メインの処理"""
+    menus = []
+    with open('input/menu.csv', encoding='utf-8') as f:
+        for row in f:
+            columns = row.rstrip().split(',')
+            col_name = columns[0]
+            col_price = int(columns[1])
+            menu = Menu(col_name, col_price)
+            menus.append(menu)
+
+    print('# 正規価格')
+    for mm in menus:
+        print(mm.name + 'は' + str(mm.price) + '円')
+    print('')
+
+    print('# 半額の場合')
+    for mm in menus:
+        print(mm.name + 'は' + str(mm.discount50()) + '円')
+
+
+if __name__ == '__main__':
+    main()
