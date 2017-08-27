@@ -1,0 +1,36 @@
+fruits_price = {'りんご': 100,
+                'みかん': 50,
+                'もも': 300}
+
+# 税率（％）
+tax = 8
+
+
+# この下に関数get_priceを記述します
+def get_price(fruit_name):
+    """辞書fruits_priceから価格を取り出し、税込価格を計算する
+       小数点以下は切り捨てます
+    """
+    if fruit_name in fruits_price.keys(): 
+        price = fruits_price[fruit_name] * (1 + tax /100)
+        return int(price)
+    else:
+        return None
+    
+
+
+def main():
+    # 今日仕入れた果物
+    today_fruits = ['ぶどう', 'りんご', 'みかん']
+    for fruit in today_fruits:
+        # 税込み価格の取得
+        fruit_price = get_price(fruit)
+        # この下に処理を記述します
+        if fruit_price != None:
+            print('{}の税込価格は{:,d}円です'.format(fruit, fruit_price))
+        else:
+            print('{}の価格は登録されていません'.format(fruit))
+
+
+if __name__ == '__main__':
+    main()
