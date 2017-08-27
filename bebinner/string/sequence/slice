@@ -1,0 +1,7 @@
+message = '春は曙。やうやう白くなりゆく山際、すこしあかりて、紫だちたる雲の細くたなびきたる。'
+
+print(message[2])
+print(message[-16:])
+print(message[:4])
+print(message[17:24])
+print(message[-11:])
