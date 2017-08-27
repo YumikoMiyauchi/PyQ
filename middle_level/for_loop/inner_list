@@ -1,0 +1,15 @@
+def main():
+    return [i**2 for i in range(10)]
+
+
+if __name__ == '__main__':
+    print(main())
+
+
+このリストはfor文で作れます。
+
+def main():
+    l = []
+    for i in range(10):
+        l.append(i ** 2)
+    return l
