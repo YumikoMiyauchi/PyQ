@@ -1,0 +1,13 @@
+def main():
+    with open('input/clean_up.csv', encoding = 'utf-8') as f:
+        for row in f:
+            row_s = row.rstrip().split(',')
+            day = row_s[0]
+            member = row_s[1:]
+            if '高山' in member or '渡辺' in member:
+                print(day)
+
+
+
+if __name__ == '__main__':
+    main()
