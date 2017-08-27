@@ -1,0 +1,14 @@
+def is_child(age):
+    return age < 18
+
+def main():
+    members = [{'name': 'サトシ', 'age': 22}, {'name': 'ヨウコ', 'age': 16}]
+    for member in members:
+        if is_child(member['age']):
+            print('{}は子供'.format(member['name']))
+        else:
+            print('{}は大人'.format(member['name']))
+
+
+if __name__ == '__main__':
+    main()
