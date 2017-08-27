@@ -1,0 +1,13 @@
+# ボーリングの得点
+score_list = [98, 220, 201, 145, 180]
+
+# 並び替え
+sorted_score = sorted(score_list, reverse=True)
+
+# 表示
+print(sorted_score)
+
+
+
+reverse
+[220, 201, 180, 145, 98]
