@@ -1,0 +1,8 @@
+# チアリーディング部の入部希望者
+member = ["Sophia", "Emma", "Isabella", "Olivia", "Ava",
+          "Emily", "Abigail", "Mia", "Madison", "Elizabeth"]
+
+# 並べ替え
+sorted_member = sorted(member)
+# 表示
+print(sorted_member)
