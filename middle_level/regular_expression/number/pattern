@@ -1,0 +1,18 @@
+import re
+
+with open('input/location.csv', encoding='utf-8') as f:
+    for row in f:
+        row = row.strip()
+        columns = row.split(',')
+        post = columns[1]
+        
+        
+        # ここから下に実装してください。
+        if not re.match('\d\d\d-\d\d\d\d$', post):
+            print(row)
+            
+            
+        
+メタ文字\d:「任意の数字1文字」にマッチします
+数字3桁-数字4桁 にマッチするパターン文字列は \d\d\d-\d\d\d\d です
+$ 文字列の終端にマッチします。パターンの末尾に$を付けると、パターンより長い文字列にマッチしません
