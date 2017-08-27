@@ -1,0 +1,31 @@
+from datetime import datetime
+
+
+class Member:
+    """会員用クラス"""
+
+    def __init__(self, name, birthday, mail):
+        """属性を初期化"""
+        self.name = name
+        self.birthday = datetime.strptime(birthday, '%Y-%m-%d').date()
+        self.mail = mail
+
+
+def main():
+    """メインの処理"""
+    members = []
+    # ここにファイルからデータを読み込み、Memberクラスのインスタンスを作ります
+    with open('input/member.csv', encoding='utf-8') as f:
+        for row in f:
+            co = row.rstrip().split(',')
+            co_m = co[0]
+            co_b = co[1]
+            co_ma = co[2]
+            member = Member(co_m, co_b, co_ma)
+            members.append(member)
+    for member in members:
+        print(member.name, member.birthday, member.mail)
+
+
+if __name__ == '__main__':
+    main()
