@@ -1,0 +1,14 @@
+import os
+
+def search(target_path, search_file):
+    """指定されたパスの中に指定されたファイルが存在するか"""
+    path = os.path.join(target_path, search_file)
+    
+    if os.path.exists(path):
+        print(path + 'は存在します。')
+    else:
+        print(path + 'は存在しません。')
+
+if __name__ == '__main__':
+    search('input', 'a.txt')
+    search('input', 'b.txt')
