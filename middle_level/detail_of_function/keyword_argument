@@ -1,0 +1,48 @@
+# ここにキーワード引数とデフォルト値を設定します
+def create_card_kw(name, job_title, mail, extension=None, additional_name=''):
+    """名刺の内容を作成."""
+
+    card_items = []
+    card_items.append('株式会社ビープラウド')
+    card_items.append(job_title)
+    card_items.append(name + additional_name)
+    card_items.append('MAIL: {}'.format(mail))
+
+    tel = 'TEL: 03-9999-9999 FAX: 03-9999-9998'
+    # 内線番号が入力された場合
+    if extension:
+        tel += ' 内線: {}'.format(extension)
+    card_items.append(tel)
+
+    card_items.append('URL: http://www.beproud.jp')
+
+    return '\n'.join(card_items)
+
+
+def main():
+    # ここに引数を5つ指定します
+    takahashi = create_card_kw('高橋　二郎', 'マネージャー', 'jirou@beproud.jp', '0013', ' (snsID: @jirou-bp)')
+    print(takahashi)
+    # ここにキーワード引数を指定します
+    tanaka = create_card_kw('佐藤　香織', '営業', 'kaori@beproud.jp', additional_name=' (旧姓: 田中)')
+    print(tanaka)
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+関数の基本の演習問題で用いた名刺情報作成プログラムを、キーワード引数とデフォルト引数値の指定を使って改修します。
+
+その数値がものによってある場合とない場合が考えられるとき
+
+
+
+それぞれの人が持つ名前、職種、メールアドレスは通常引数として必須で指定します
+人によってある場合とない場合のある内線番号、SNSのIDや名前の補足はデフォルト引数値を指定しておき、ある場合はキーワード引数に値を持たせて指定します
+関数名はcreate_card_kwです。
+通常引数：nameに名前、job_titleに職種、mailにメールアドレスを指定します
+デフォルト引数値を持つ引数は以下の通り指定します
+extension：内線番号（デフォルトはNone）
+additional_name：SNSのIDや名前の補足（デフォルトは空文字）
