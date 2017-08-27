@@ -1,0 +1,30 @@
+print(int(1))
+print(float(2.0))
+print(int('1'))
+#print(int('1.2'))
+print(float('1.2'))
+
+
+
+numbers = [10, 3, 22, 42, 145]
+
+print(abs(-1))
+print(abs(-5.0))
+print(abs(255))
+
+print(max(numbers))
+print(min(numbers))
+
+
+
+x1, y1 = divmod(10, 3)
+print('10割る3の商は{}, 余りは{}です。'.format(x1, y1))
+
+x2, y2 = divmod(200, 7)
+print('200割る7の商は{}, 余りは{}です。'.format(x2, y2))
+
+
+
+print(type(5))
+print(type(4.2))
+print(type('あいうえお'))
