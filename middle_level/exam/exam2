@@ -1,0 +1,39 @@
+def load_orders(target_date):
+    """ ORDER_DIR のCSVからOrderのリストを作る
+
+    * 各値の前後から空白を除外する
+    """
+    date_str = target_date.strftime('%Y%m%d')
+    dir_list = []
+    for filename in os.listdir(ORDER_DIR):
+        if date_str not in filename:
+            #対象日でないファイルは無視
+            continue
+        
+        filepath = os.path.join(ORDER_DIR, filename)
+        with open(filepath, encoding='utf-8') as f:
+            for row in f:
+                item_id, amount, address, tel, name, shipping_date = row.rstrip().split(',')
+                order = Order(item_id, 
+                              amount, 
+                              address, 
+                              tel, 
+                              name, 
+                              shipping_date,
+                             filename)
+                dir_list.append(order)
+    return dir_list
+
+
+次に load_orders 関数を書きましょう。
+この関数は ORDER_DIR から注文受付ファイルを読み込み、 Order のリストを返す関数です。
+
+空のリストを作成
+ORDER_DIR 内のファイルから読み込み対象日（target_date）に一致するファイルをすべて取得
+一致するファイルを1つ1つ開く
+開いたファイルを1行ずつ読み込み、 , で分割してそれぞれ「注文商品ID」「個数」「宅配先住所」「電話番号」「氏名」「宅配日」の文字列を取る
+行から取り出した各文字列を 文字列.strip() して前後のスペース、改行を取る
+各文字列とファイル名から Order のオブジェクトを作って、 1 で作ったリストに追加
+全行、全ファイルを読み終わったら 1 で作ったリスト（Order のリスト）を関数から返す
+先程の load_items 関数と処理は近いです。
+ですが読み込む対象のファイルが複数になるので少し難しいです。
