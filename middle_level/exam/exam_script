@@ -1,0 +1,200 @@
+from datetime import date, datetime
+import os
+import re
+
+ITEM_TSV_PATH = 'items.tsv'
+ORDER_DIR = 'order/'
+FAILURE_DIR = 'failure/'
+DELIVERY_DIR = 'delivery/'
+
+
+class Item:
+    """ 1商品に対応するクラス
+    """
+    def __init__(self, item_id, name, price):
+        self.item_id = item_id
+        self.name = name
+        self.price = price
+
+class Items:
+    """load_items()の結果を処理する"""
+    def __init__ (self, items):
+        self.items = items
+        
+    def has_id(self, item_id):
+        """ item_id をもつ商品が存在するかチェックする
+        """
+        #list内の要素を1つずつ取ってきてそのidと引数のidを比較する
+        #1つでも一致すればTrue、それ以外はFalseを返す
+        for item in self.items:
+            if item_id == item.item_id:
+                return True
+        return False
+        
+class Order:
+    AMOUNT_RE = re.compile(r'^[0-9]+$')
+    TEL_RE = re.compile(r'^[0-9]{2,4}-[0-9]{4}-[0-9]{4}$')
+                           
+    def __init__(self, item_id, amount, shipping_address, tel_number,
+                 fullname, shipping_date_str, order_file):
+        self.item_id = item_id
+        self.amount = amount
+        self.shipping_address = shipping_address
+        self.tel_number = tel_number
+        self.fullname = fullname
+        self.shipping_date_str = shipping_date_str
+        self.order_file = order_file
+
+        self.amount_int = None
+        self.shipping_date = None
+
+    def validate(self, items):
+        """ 各注文の値が正しいかバリデーションチェックする。OKの場合True、NGの場合False
+        """
+        if not items.has_id(self.item_id):
+            return False
+        if not self.AMOUNT_RE.search(self.amount):
+            return False
+        self.amount_int = int(self.amount)
+        if self.amount_int <= 0:
+            return False
+        if not self.shipping_address:
+            return False
+        if not self.TEL_RE.search(self.tel_number):
+            return False
+        if not self.fullname:
+            return False
+        try:
+            self.shipping_date = datetime.strptime(self.shipping_date_str, '%Y-%m-%d')
+        except ValueError:
+            return False
+        return True
+        
+    def row_string(self):
+        return ','.join((
+            self.item_id,
+            self.amount,
+            self.shipping_address,
+            self.tel_number,
+            self.fullname,
+            self.shipping_date_str,
+            self.order_file,
+        ))
+
+
+def load_items():
+    """ ITEM_TSV_PATHのTSVからItemsを作る
+    """
+
+    i_list = []
+    with open(ITEM_TSV_PATH, encoding='utf-8') as f:
+        for row in f:
+            col = row.rstrip().split('\t')
+            i_id = col[0]
+            i_name = col[1]
+            i_price = col[2]
+            item = Item(i_id, i_name, i_price)
+            i_list.append(item)
+    return Items(i_list)
+            
+
+def load_orders(target_date):
+    """ ORDER_DIR のCSVからOrderのリストを作る
+
+    * 各値の前後から空白を除外する
+    """
+    date_str = target_date.strftime('%Y%m%d')
+    dir_list = []
+    for filename in os.listdir(ORDER_DIR):
+        if date_str not in filename:
+            #対象日でないファイルは無視
+            continue
+        
+        filepath = os.path.join(ORDER_DIR, filename)
+        with open(filepath, encoding='utf-8') as f:
+            for row in f:
+                item_id, amount, address, tel, name, shipping_date = row.rstrip().split(',')
+                order = Order(item_id, 
+                              amount, 
+                              address, 
+                              tel, 
+                              name, 
+                              shipping_date,
+                             filename)
+                dir_list.append(order)
+    return dir_list
+
+
+def write_deliver_orders(orders):
+    """ Orderのリストを受け取って日別注文ファイルに書き込み
+    """
+    # 宅配日毎に集計。ファイルをオープンする回数を減らすため事前にまとめる
+    date_orders = {}
+    for order in orders:
+        if order.shipping_date in date_orders:
+            date_orders[order.shipping_date].append(order)
+        else:
+            date_orders[order.shipping_date] = [order]
+
+    for d, day_orders in date_orders.items():
+        filename = 'delivery_{}.csv'.format(d.strftime('%Y%m%d'))
+        filepath = os.path.join(DELIVERY_DIR, filename)
+        with open(filepath, 'a', encoding='utf-8') as f:
+            for order in day_orders:
+                f.write(order.row_string() + '\n')
+
+
+def write_failure_orders(orders, order_date):
+    """ Orderのリストを受け取って注文受付失敗ファイルに書き込み
+    """
+    str_date = order_date.strftime('%Y%m%d')
+    new_name = 'failure_{}.csv'.format(str_date)
+    file_path = os.path.join(FAILURE_DIR, new_name)
+    with open(file_path, 'a', encoding='utf-8') as f:
+        for order in orders:        
+            f.write(order.row_string()+'\n')
+
+def main(target_date=None):
+    """ 毎日の注文集計用スクリプト
+
+    1. 商品マスター読み込み
+    2. 当日分の注文受付ファイル読み込み
+    3. 注文をバリデーションチェック
+    4. 日別注文ファイル書き込み
+    5. 注文受付失敗ファイル書き込み
+    """
+    target_date = target_date or date.today()
+
+    items = load_items()
+    orders = load_orders(target_date)
+    validated_orders = []
+    failed_orders = []
+    for order in orders:
+        if order.validate(items):
+            validated_orders.append(order)
+        else:
+            failed_orders.append(order)
+
+    if validated_orders:
+        write_deliver_orders(validated_orders)
+    if failed_orders:
+        write_failure_orders(failed_orders, target_date)
+
+
+if __name__ == '__main__':
+    main(date(2016, 12, 14))  # あくまで動作確認用に日付を指定している
+
+
+main関数の処理
+
+main() は初めに呼び出される関数で、注文集計処理の全体を進める関数です。
+処理を読むと以下のような順序で実行されているのが分かります。
+
+引数に処理対象日を受け取る、指定がない場合は今日の日付を取得
+商品マスターを load_items() で読み込み
+load_orders(target_date) で今日の注文を取得
+今日の注文1つ1つを order.validate(items) で正しい入力かチェック
+注文された商品が存在するかなどもチェックするので、商品マスター items を order.validate() メソッドに渡しています
+order.validate(items) の結果、正しいものを write_deliver_orders(...) 関数に渡して日別注文ファイルに書き込み
+正しくないものを write_failure_orders(...) 関数に渡して「注文受付失敗ファイル」に書き込み
+注文受付失敗ファイルはファイル名に取込処理した日を含むので target_date も関数に渡しています
