@@ -1,0 +1,45 @@
+import unittest
+
+# テスト対象のモジュール
+import math
+
+
+class TestPow(unittest.TestCase):
+    def test__pow(self):
+        """ 正の整数を正の整数でべき乗
+        """
+        actual = math.pow(4, 2)
+        self.assertEqual(actual, 16)
+
+    def test__negative(self):
+        """ 正の整数を負の整数でべき乗
+        """
+        actual = math.pow(4, -2)
+        self.assertEqual(actual, 1/16)
+
+
+class TestCeil(unittest.TestCase):
+    def test__float(self):
+        """ 入力が float の場合
+        """
+        actual = math.ceil(4.8)
+        self.assertEqual(actual, 5)
+
+    def test__int(self):
+        """ 入力が int の場合
+        """
+        actual = math.ceil(5)
+        self.assertEqual(actual, 5)
+
+class TestFactorial(unittest.TestCase):
+    def test__int(self):
+        """ 入力が正の整数の場合
+        """
+        actual = math.factorial(8)
+        self.assertEqual(actual, 8*7*6*5*4*3*2*1)
+
+    def test__negative(self):
+        """ 入力が負の整数の場合、ValueErrorを送出する
+        """
+        with self.assertRaises(ValueError):
+            math.factorial(-8)
