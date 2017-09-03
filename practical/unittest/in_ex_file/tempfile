@@ -1,0 +1,60 @@
+import tempfile
+import unittest
+
+from counter import count_file_lines
+
+
+class TestCountFileLines(unittest.TestCase):
+    def test__count(self):
+        with tempfile.NamedTemporaryFile(mode='w') as f:
+            f.write("""one
+two
+three
+four
+""")
+            f.flush()
+            actual = count_file_lines(f.name)
+        self.assertEqual(actual, 4)
+
+######counter.py##########
+def count_file_lines(filepath):
+    """ filepath にあるファイルの行数を返す関数
+    """
+    with open(filepath, encoding='utf-8') as read_f:
+        num_lines = len(read_f.readlines())
+        return num_lines
+        
+        
+        
+        
+ファイル入出力をする関数をテストするには、実際のファイルを用意したり、出力されたファイルを開いて確認する必要があります。
+ですが、テスト実行のたびにテスト用のファイルが作られると邪魔になってしまいます。
+
+テスト実行後にゴミが残る
+すでに存在しているファイルによって、テストやテスト対象が影響を受けて挙動が変わってしまう
+標準ライブラリ tempfile で、一時ファイルやディレクトリを使ったテストを書くようにしましょう。
+この関数は引数に受け取ったファイルパスからファイルを読み込み、ファイルの行数を返します。
+tempfile ライブラリを使ってテスト用の一時ファイルを作成し、引数に渡しましょう
+
+# fは4行
+with tempfile.NamedTemporaryFile(mode='w') as f:
+    f.write("""one
+two
+three
+four
+""")
+
+# fは5行
+with tempfile.NamedTemporaryFile(mode='w') as f:
+    f.write("""one
+    two
+    three
+    four
+    """)
+    
+tempfile.NamedTemporaryFile を使うと簡単に一時ファイルを作れます。
+
+with ... 内で使うと作られた一時ファイルの削除も自動で行われるので便利です。
+mode="w" 引数でファイルに文字列で書き込むように指定しています。こうすると f.write("...") のように文字列を書き込めます。
+f.flush() は書き込み用のバッファから確実にファイルへの書き込みを実行させる処理です。通常 flush はファイルクローズ時に必ず実行されますが、書き込み用にファイルを開いたまま他のファイルから読み込んでいるので一度明示的に f.flush() を呼ぶ必要があります
+f.name から、作った一時ファイルへのファイルパスが取得できます。 count_file_lines 関数はファイルパスを受け取るので、この値をそのまま渡しています。
