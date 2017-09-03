@@ -1,0 +1,135 @@
+import argparse
+import logging
+import os
+import re
+
+#ロギングの基本を設定する
+logging.basicConfig(level=logging.INFO)
+
+
+# ログをパースするための正規表現
+REG_LOG = re.compile(r'^(?P<level>INFO|ERROR):applog:(?P<message>.+)$')
+
+
+def parse_log(log_str):
+    """ 対象のログをパースして辞書で情報を返す
+    """
+    m = REG_LOG.match(log_str)
+    if m:
+        return m.groupdict()
+    else:
+        return
+
+
+def main(args):
+    """
+    引数に指定されたログを取得し、エラーログだけをメッセージごとに
+    集約してレポート用のテキストに出力する
+
+    * ログは引数に指定されたディレクトリー内に `YYYYmmdd.log` というファイル名で
+      置かれている
+    * 引数には対象のディレクトリー、対象の日付が `YYYYmmdd` で渡される
+    * レポートは `YYYYmmdd_report.txt` というファイルに出力する
+
+    ログファイルの形式
+    ----------------
+
+    以下のようなコロン区切りの形式::
+
+        ERROR:applog:ログメッセージ
+
+    それぞれデータの意味
+
+    * ログの緊急度を表す、ログレベル。INFO、ERRORのどちらか
+    * ロガーの名前、どこからログが来たのか。今回の場合は applog で固定
+    * ログメッセージ。ログの本文
+    """
+    target_log_path = os.path.join(args.dir, args.date + '.log')
+    report_path = os.path.join(args.dir, args.date + '_report.txt')
+    
+    logging.info('Started log-reporter for %s', target_log_path)
+
+    # ファイルオープン
+    with open(target_log_path, encoding='utf-8') as f:
+        rows = f.readlines()
+        
+    logging.info('Target log file opened. num rows %s', len(rows))
+
+    error_messages = {}
+    
+    logging.info('Aggregating error logs')
+
+    for row in rows:
+        log_data = parse_log(row.strip())
+        if not log_data:
+            continue
+
+        if log_data['level'] == 'ERROR':
+            # エラーログの内容ごとに合計を計算する
+            if log_data['message'] in error_messages:
+                error_messages[log_data['message']] += 1
+            else:
+                error_messages[log_data['message']] = 1
+
+    logging.info('Done error aggregation')
+    
+    if error_messages:
+        # エラーログがあるときだけファイル出力
+        logging.info('Error log found, saving to report file %s',
+                     report_path)
+        
+        body = """全ログ件数: {count_logs}
+--------------------
+""".format(count_logs=len(rows))
+
+        # エラーを本文に追記する。回数の多かった順に書き込む
+        for m, c in sorted(error_messages.items(),
+                           key=lambda x: x[1],
+                           reverse=True):
+            body += "{message}: {count}\n".format(message=m, count=c)
+
+        with open(report_path, 'w', encoding='utf-8') as f:
+            f.write(body)
+            
+        logging.info('Saved report file')
+        
+    logging.info('log-reporter successfully done')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='ログのレポートをするスクリプト')
+    parser.add_argument('dir', help='ログが保存されているディレクトリー')
+    parser.add_argument('date', help='パース対象のログの日時')
+    
+    args = parser.parse_args()
+    main(args)
+
+
+
+ログファイルを集計してレポートを作成するスクリプトがあります。
+すでにエディタ上にすでに書かれていますが、このスクリプトにはいくつかの問題があるので改良します。
+
+
+このパートで学ぶこと
+
+標準ライブラリ argparse を使った引数の受け取り方
+docstring の書き方と、ドキュメントを書くポイント
+標準ライブラリ logging の使い方と、ログを残すポイント
+
+
+
+プログラムの問題
+
+このスクリプトにはいくつかの問題があります。
+
+特定のログファイルしか開けない。対象のファイルを変えるたびに、スクリプトを書き変えないといけない
+スクリプトの使い方が分からない。ソースコードを見てもドキュメントがないので、コードを読み解く必要がある
+実行中の状態が見えない。どこまで実行されているかが分からない
+たしかに今のままでも最低限動作はしますが、仕事で毎日使うには面倒が多いです。
+このスクリプトを業務で使えるレベルに改良していきましょう！
+
+すでに書かれているプログラムの不足部分を書いて、  play_arrow実行  ボタンをクリックしましょう。
+正常に実行されたら logs ディレクトリにレポートが出力されているか確認しましょう。
+ターミナル をクリックしてターミナルを開き、以下を実行して手動で確認もできます。
+
+python logreporter.py ./logs 20160802
