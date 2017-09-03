@@ -1,0 +1,57 @@
+import unittest
+from unittest import mock
+
+from user import get_username, get_sign
+
+
+class TestGetUsername(unittest.TestCase):
+    def test__get(self):
+        dummy_user = mock.Mock()
+        dummy_user.username = 'john'
+        
+        self.assertEqual(get_username(dummy_user), 'john')
+        
+class TestGetSign(unittest.TestCase):
+    def test__sign(self):
+        dummy_user = mock.Mock()
+        dummy_user.get_fullname.return_value = 'John Doe'
+        dummy_user.email = 'john@example.com'
+        
+        self.assertEqual(get_sign(dummy_user),
+                        'John Doe <john@example.com>')
+        dummy_user.get_fullname.assert_called_with()
+        
+        
+        
+        
+mock を使うと簡単にニセモノのオブジェクトを作ったり、
+標準ライブラリや外部ライブラリをニセモノに置き換えたりできます。
+
+ニセモノのオブジェクトを簡単に作る mock.Mock() の基本的な使い方から学びます
+
+
+mock.Mock() を使うと「ニセモノ」のオブジェクトを作れます。
+Mock には属性やメソッドなどを自由に設定できるので、テストに使いたい値だけを設定してテスト対象に渡せます。
+属性 username を作って値 'john' を設定するには下のようにします。
+
+dummy_user = mock.Mock()
+dummy_user.username = 'john'
+
+属性だけでなくメソッドも設定できます。
+メソッドを設定する場合、 .<メソッド名>.return_value = '返す値' と書きます。
+メソッド get_fullname を作って値 'John Doe' を返すようにするには下のようにします。
+
+dummy_user.get_fullname.return_value = 'John Doe'
+
+# 'John Doe' を返すメソッドが作られる
+dummy_user.get_fullname()
+
+メソッドがどんな引数を受け取って呼び出されたかどうかを確認するには assert_called_with を使います。
+「引数なしで呼びだされた」と確認するには下のようにします。
+
+dummy_user.get_fullname.assert_called_with()
+
+.assert_called_with の引数にはそのまま「渡されると期待していた値」を渡します。
+たとえば 1 と "python" が渡されて呼ばれたかを確認するには下のようになります。
+
+dummy_user.get_fullname.assert_called_with(1, "python")
