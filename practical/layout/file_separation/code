@@ -1,0 +1,82 @@
+########main.py
+from item import read_items
+from sales import read_sales_raw, write_sales
+
+def main():
+    target_year = '2016'
+    target_month = '11'
+
+    # 商品のマスターデータ読み込み
+    items = read_items()
+
+    # 売上の生データを読み込み
+    sales_raw = read_sales_raw(target_year, target_month)
+
+    # 商品の情報を追加する
+    sales = []
+    for row in sales_raw:
+        if row['item_id'] in items:
+            row['item_name'] = items[row['item_id']]['name']
+            row['item_price'] = items[row['item_id']]['price']
+            sales.append(row)
+
+    # まとめた売上データを書き出し
+    write_sales(sales)
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+########item.py########
+import csv
+
+ITEMS_DATA = 'input/items.csv'
+ITEMS_COLUMNS = ['item_id', 'name', 'price']
+
+
+def read_items():
+    """ 商品のマスターデータを読み込む関数
+    """
+    items = {}
+    with open(ITEMS_DATA, encoding='utf-8') as f:
+        for row in csv.DictReader(f, fieldnames=ITEMS_COLUMNS):
+            items[row['item_id']] = row
+    return items
+    
+    
+    
+########sales.py########
+import csv
+import os
+import re
+
+SALES_RAW_DIR = './input/'
+SALES_RAW_REGEX = re.compile(r'^sales_raw_(\d{4})(\d{2})(\d{2}).csv$')
+SALES_RAW_COLUMNS = ['purchase_id', 'user_id', 'item_id', 'amount', 'sold_at']
+
+SALES_CSV = './output/sales.csv'
+SALES_COLUMNS = ['purchase_id', 'user_id', 'item_id',
+                 'item_name', 'item_price', 'item_price_tax_inc', 'amount', 'sold_at']
+	
+
+def read_sales_raw(target_year, target_month):
+    """ 対象年月 (target_year, target_month) の売上の生データを読み込む関数
+    """
+    sales_raw = []
+    for name in os.listdir(SALES_RAW_DIR):
+        m = SALES_RAW_REGEX.search(name)
+        if m and m.group(1) == target_year and m.group(2) == target_month:
+            with open(os.path.join(SALES_RAW_DIR, name), encoding='utf-8') as f:
+                for row in csv.DictReader(f, fieldnames=SALES_RAW_COLUMNS):
+                    sales_raw.append(row)
+    return sales_raw
+
+
+def write_sales(sales):
+    """ 整形した売上データを書き出す関数
+    """
+    with open(SALES_CSV, mode='w', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=SALES_COLUMNS)
+        writer.writerows(sales)
