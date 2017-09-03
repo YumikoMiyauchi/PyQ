@@ -1,0 +1,92 @@
+import unittest
+
+from smartphone import detect_smartphone_os
+
+
+class TestDetectSmartPhoneOS(unittest.TestCase):
+    def test__iphone(self):
+        self.assertEqual(detect_smartphone_os('iPhone'),'iOS')
+
+    def test__berry(self):
+        self.assertEqual(detect_smartphone_os('BlackBerry'),'BlackBerry')
+        
+
+    def test__droid(self):
+        ANDROID_PREFIXES = (
+    'Nexus',
+    'Galaxy',
+    'Zenfone',
+)
+        for pre in ANDROID_PREFIXES:
+            self.assertEqual(detect_smartphone_os(pre),'Android')
+            
+    def test__unlnown(self):
+        self.assertEqual(detect_smartphone_os(''), 'Unknown')
+        
+       
+  
+########smartphone.py########
+ANDROID_PREFIXES = (
+    'Nexus',
+    'Galaxy',
+    'Zenfone',
+)
+
+
+def detect_smartphone_os(name):
+    """ スマートフォン端末名 name から OS を判定する関数
+    """
+    if name.startswith('iPhone'):
+        return 'iOS'
+    elif name.startswith('BlackBerry'):
+        return 'BlackBerry'
+
+    for prefix in ANDROID_PREFIXES:
+        if name.startswith(prefix):
+            return 'Android'
+
+    return 'Unknown'
+    
+    
+    
+    
+    
+ただ実はこの関数には問題があります。
+"BlackBerry PRIV" というスマートフォン端末があるのですが、これはAndroid端末です。
+detect_smartphone_os("BlackBerry PRIV") 関数は "BlackBerry" と返してしまいます。
+今回のように命令を網羅していても関数の仕様や意図そのものに問題があることがあります。
+
+こんなテストも書いておいたほうが良いかもしれません。
+
+    def test__android_blackberry(self):
+        self.assertEqual(detect_smartphone_os('BlackBerry PRIV'), 'Android')
+
+これを追記するとめでたくテストは不合格になります。
+「間違って合格してしまう」を、「正しく不合格と判定できる」ようにしました。もちろん、こちらのほうが良いです。
+テストが正しく不合格になったところで、 detect_smartphone_os を修正します。たとえばこんなふうに。
+
+PREFIXES_MAP = {
+    'iPhone': 'iOS'
+    'Nexus': 'Android',
+    'Galaxy': 'Android',
+    'Zenfone': 'Android',
+    'BlackBerry PRIV': 'Android',
+    'BlackBerry BOLD': 'BlackBerry'
+}
+
+
+def detect_smartphone_os(name):
+    """ スマートフォン端末名 name から OS を判定する関数
+    """
+    # 確かな根拠のある端末
+    for prefix, os in PREFIXES_MAP.items():
+        if name.startswith(prefix):
+            return os
+
+    return 'Unknown'
+
+このようにテストを書いていく中で実装や仕様自体を見直すことはとても大切です。
+実装を読んだり仕様を理解する過程で、抜けているケースや問題に気づけます。
+
+この detect_smartphone_os 関数はもっともっと良くできます。
+扱っている問題が現実の問題なのでテストも際限なく増やせますし、実装もより高度なものにできます。
