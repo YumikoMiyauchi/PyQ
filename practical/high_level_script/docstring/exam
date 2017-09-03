@@ -1,0 +1,39 @@
+from datetime import date
+from datetime import timedelta
+
+
+def date_step(from_date, step_days=1):
+    """
+    from_date 順に日付を返し続けるジェネレーター関数
+    step_days の日数ごとに日付を返します。
+	
+    >>> from datetime import date
+    >>> g = date_step(date(2016, 1, 3), step_days=1)
+    >>> next(g)
+    date(2016, 1, 3)
+    >>> next(g)
+    date(2016, 1, 4)
+    ...
+	
+    from_date は date オブジェクトか、 datetime オブジェクトが使えます。
+    """
+    current = from_date
+    while True:
+        yield current
+        current += timedelta(days=step_days)
+
+
+if __name__ == '__main__':
+    g = date_step(date(2016, 1, 3), step_days=1)
+    print(next(g))
+    print(next(g))
+    
+    
+    
+    
+    
+ocstringを書いてみましょう。エディタ上に書かれている関数に、docstringを追記してください。
+この date_step 関数は前問の date_range とほぼ同じですがより単純で、 to_date を受け取りません。
+next で呼ばれ続ける限り、無限に日付を返し続けます。
+
+date_step 関数にdocstringを書いてください。
