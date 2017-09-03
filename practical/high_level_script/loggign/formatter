@@ -1,0 +1,52 @@
+import logging
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+stream_handler.setFormatter(logging.Formatter(
+    '%(pathname)s:%(lineno)s %(asctime)s %(name)s %(levelname)s %(message)s'
+))
+
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[stream_handler]
+)
+
+def get_data():
+    """ ファイルなどからデータを取得する関数の、つもり
+    """
+    return [
+        {'id': 1},
+        {'id': 2},
+        {'id': 3},
+    ]
+
+
+def main():
+    """ まとめてデータを処理する関数の、つもり
+    """
+    logging.info("Started main")
+
+    try:
+        data = get_data()
+    except IOError as e:
+        logging.error("Failed to load data: %s", e)
+        return
+
+    logging.info("Data has %s lines", len(data))
+
+    for d in data:
+        print(d)
+
+    logging.info("Ended main")
+
+
+if __name__ == '__main__':
+    main()
+    
+    
+    
+    
+フォーマッターを使うとより多彩な情報を出力できます。
+これまでは単に INFO:root:message のような味気ない情報でしたが、他にもログが出された日時やファイルの場所も出力できます。
+
+ファイル名、行番号、出力された日時も含まれるようにしましょう。
