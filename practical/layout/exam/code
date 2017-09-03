@@ -1,0 +1,128 @@
+########todo.py########
+import argparse
+
+from commands import list_tasks, add_task, done_task, clear_tasks
+
+
+def main():
+
+    parser = argparse.ArgumentParser()
+    sub_parsers = parser.add_subparsers()
+
+    list_parser = sub_parsers.add_parser('list', help="タスクの一覧を表示")
+    list_parser.set_defaults(func=list_tasks)
+
+    add_parser = sub_parsers.add_parser('add', help="タスクを追加")
+    add_parser.add_argument('body', type=str, help="追加するタスクの本文")
+    add_parser.set_defaults(func=add_task)
+
+    done_parser = sub_parsers.add_parser('done', help="タスクを完了")
+    done_parser.add_argument('body', type=str, help="完了にするタスクの本文")
+    done_parser.set_defaults(func=done_task)
+
+    clear_parser = sub_parsers.add_parser('clear', help="完了しているタスクを消去")
+    clear_parser.set_defaults(func=clear_tasks)
+	
+    args = parser.parse_args()
+    args.func(args)
+
+if __name__ == "__main__":
+    main()
+    
+    
+########task.py########
+# task.py
+import json
+import os
+
+
+TASKS_PATH = './tasks.json'
+
+
+class Task:
+    def __init__(self, body, done=False):
+        self.body = body
+        self.done = done
+        
+        
+def load_tasks():
+    if not os.path.exists(TASKS_PATH):
+        return []
+       
+    with open(TASKS_PATH, encoding='utf-8') as f:
+        data = json.load(f)
+        tasks = [Task(**task) for task in data['tasks']]
+           
+        return tasks
+        
+        
+def save_tasks(tasks):
+    with open(TASKS_PATH, mode='w', encoding='utf-8') as f:
+        json.dump({
+            'tasks': [
+                {'body': task.body, 'done': task.done}
+                for task in tasks
+            ]
+        }, f, ensure_ascii=False, indent='   ')
+        
+        
+        
+#########command.py########
+# commands.py
+from task import Task, load_tasks, save_tasks
+
+
+def list_tasks(args):
+    tasks = load_tasks()
+    todos = [task for task in tasks if not task.done]
+    dones = [task for task in tasks if task.done]
+    
+    print("# Todo")
+    for task in todos:
+        print("*", task.body)
+    print()
+    
+    print('# Done')
+    for task in dones:
+        print("*", task.body)
+        
+        
+def add_task(args):
+    tasks = load_tasks()
+    tasks.append(Task(args.body))
+    save_tasks(tasks)
+    
+    
+def done_task(args):
+    tasks = load_tasks()
+    for task in tasks:
+        if task.body == args.body:
+            task.done = True
+            
+    save_tasks(tasks)
+    
+    
+def clear_tasks(args):
+    tasks = load_tasks()
+    tasks = [task for task in tasks if not task.done]
+    save_tasks(tasks)
+    
+    
+    
+========tasks.json========
+{
+  "tasks": [
+    {
+      "body": "牛乳を買う",
+      "done": false
+    },
+    {
+      "body": "Pythonを勉強する",
+      "done": false
+    },
+    {
+      "body": "Pythonの本を読む",
+      "done": true
+    }
+  ]
+}
