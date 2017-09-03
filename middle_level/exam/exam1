@@ -86,30 +86,7 @@ def load_orders(target_date):
 
 問題ごとに依頼されたプログラムを作っていきましょう。
 
-現在あるコード
 
-エディターを見ると現状完成している処理は3つです
-
-Item(): 1商品の情報をもつクラス
-Order(): 1つの注文を表すクラス
-write_deliver_orders: Orderのリストから「日別注文ファイル」に書き込む関数
-main(): 注文集計処理（毎日実行されるエントリーポイントです）
-main関数の処理
-
-main() は初めに呼び出される関数で、注文集計処理の全体を進める関数です。
-処理を読むと以下のような順序で実行されているのが分かります。
-
-引数に処理対象日を受け取る、指定がない場合は今日の日付を取得
-商品マスターを load_items() で読み込み
-load_orders(target_date) で今日の注文を取得
-今日の注文1つ1つを order.validate(items) で正しい入力かチェック
-注文された商品が存在するかなどもチェックするので、商品マスター items を order.validate() メソッドに渡しています
-order.validate(items) の結果、正しいものを write_deliver_orders(...) 関数に渡して日別注文ファイルに書き込み
-正しくないものを write_failure_orders(...) 関数に渡して「注文受付失敗ファイル」に書き込み
-注文受付失敗ファイルはファイル名に取込処理した日を含むので target_date も関数に渡しています
-足りない処理
-
-以下の処理が現状の実装に足りません
 
 Order クラスの Order.validate() メソッド: 注文のデータが正しい値かチェックするメソッド
 load_items(): 商品マスター（ITEM_TSV_PATH）から商品の情報を読み出す関数
@@ -132,6 +109,8 @@ open('items.tsv')
 
 main() 関数の始めの処理でもある商品マスター（ITEM_TSV_PATH）の読み込み処理を作りましょう。
 
+
+
 Items クラス
 
 あとで処理しやすいように load_items() 関数の結果は Items クラスのオブジェクトで返すようにします。
@@ -144,6 +123,9 @@ has_id(self, item_id):
 商品ID item_id を受け取る
 self.items に引数の item_id を Item.item_id に持つ商品が1つでもあれば True を返す
 なければ False を返す
+
+
+
 load_items 関数
 
 ITEM_TSV_PATH から商品マスターを読み込んで、 Items(...) のオブジェクトにして返してください。
