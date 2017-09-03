@@ -1,0 +1,92 @@
+import unittest
+from unittest import mock
+
+from expires import get_expires_at
+
+
+class TestExpiresAt(unittest.TestCase):
+    @mock.patch('expires.time')
+    def test__get_default(self, m):
+        m.return_value = 1470620400
+        actual = get_expires_at()
+        self.assertEqual(actual, 1470624000)
+        
+    @mock.patch('expires.time')
+    def test__get(self, m):
+        m.return_value = 1470620400
+        actual = get_expires_at(7200)
+        self.assertEqual(actual, 1470627600)
+        
+        
+        
+#######expire.py#########################
+from time import time
+
+
+def get_expires_at(expires_in=3600):
+    """ 有効期限 expires_in (秒) を受け取り、無効になる時刻をエポックタイムで返す
+    """
+    return time() + expires_in
+    
+    
+    
+引数には mock.patch('置き換え対象のPythonパス') のように、置き換える関数 / クラスのモジュールパスを書きます。
+今回の場合 expires.py 内の time 関数なので expires.time になります。
+このデコレータが付いた関数内でのみパッチ対象が置き換えられ、関数終了後に元に戻されます。
+
+デコレータがつけられた関数の第1引数には、関数から置き換えられたモックが渡されます。
+このモックに、 m.return_value = '...' と指定して、関数が返す値を置き変えています。
+
+    m.return_value = 1470620400
+
+また下のように patch デコレータで return_value を渡して、より短く書けます。
+
+    @mock.patch('expires.time', return_value=1470620400)
+    def test__get(self, m):
+        actual = get_expires_at(7200)
+        self.assertEqual(actual, 1470627600)
+
+
+
+withで使う
+
+mock.patch はデコレータだけでなく with 文としても使えます。
+
+with mock.patch('expires.time') as m:
+    m.return_value = 1470620400
+    actual = get_expires_at(...)
+
+
+
+パッチ対象は限定的に書く
+
+@mock.patch('time.time') と書くとすべての場所で使われる time() 関数が置き換えられてしまいます。
+今回は expires.py 内にインポートされている time() 関数だけを置き換えたいので 'expires.time' としています。
+@mock.patch('time.time') でも問題はありませんが、なるべくパッチの影響範囲を小さくするために 'expires.time' と書いています。
+
+
+
+なぜモックを使うのか
+
+モックは自由度が効く反面、使い過ぎるとテストの意味そのものがなくなります。
+前問でもヘルパー関数を紹介しましたが、なるべくモックを使わずに書いたほうが良いです。
+
+
+モックを使いたい場合は大きく分けて3つです。
+
+プログラム外の世界の影響を受けない、与えないようにしたい
+テスト対象が中で使っている関数が複雑なので簡単にしたい
+テスト対象が引数に使っているオブジェクトが複雑なので簡単に作りたい
+日時の取得や外部サイト、ファイルへのアクセスは「実行ごとに変わり得る」「遅い」「外に影響してしまい危険」などの理由でなるべくテスト中で触りたくありません。
+このような場合はモックで置き換えると便利です。
+
+ただし、ファイルへのアクセスの場合 tempfile を使えば現実のファイルとの影響を減らせるので、こちらを使うほうが良いです。
+実際にファイルに書いてみて発生する問題などがあるかもしれません。モックを使うとそういった問題には一切気づけなくなります。
+ 
+
+
+
+
+mock.patch を使うとすでに存在する関数やクラスもモックに置き換えれます。
+たとえば time.time() 関数は現在時刻をエポック秒で返す関数なので、実行ごとに違う値を返します。
+テストの場合、現在時刻を想定するのは難しいので mock.patch を使ってモックに置き換える必要があります。
