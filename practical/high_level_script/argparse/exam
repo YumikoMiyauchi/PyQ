@@ -1,0 +1,44 @@
+import argparse
+import random
+
+
+def anagram(text, space=False):
+    """ text のアナグラムを返す
+    room => oomr
+
+    space が指定された場合は任意の位置にスペースを入れる
+
+    room => o orm
+    """
+    ret = ""
+    if space:
+        text += " "
+    while len(text):
+        i = random.randint(0, len(text)-1)
+        ret += text[i]
+        text = text[:i] + text[i+1:]
+    return ret
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="アナグラムを表示するスクリプト")
+    parser.add_argument("text",help="アナグラム元の文字列")
+    parser.add_argument("-s", "--space", action="store_true",
+                        help="スペースを追加で1つ含める場合指定")
+    args = parser.parse_args()
+    print(anagram(args.text, args.space))
+    
+    
+    
+アナグラムを表示するスクリプトを作りましょう。
+アナグラムはある文字列の、順番をランダムに入れ替えたものです。
+
+位置引数には対象の文字を指定します：
+
+$ python anagram.py ポールマッカートニー
+ポーーーットマカルニ
+
+--space を指定すると気まぐれに1つスペースを入れるようにしましょう
+アナグラムの任意の場所にスペースが入ります：
+
+$ python anagram.py ringostarr --space
+nirastr org
