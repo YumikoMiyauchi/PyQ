@@ -1,0 +1,93 @@
+import argparse
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+
+
+def get_data():
+    """
+    ファイルやWebサイトのデータからミュージシャンの情報を取る
+    (というイメージの関数。簡略化のためそのまま値を返す)
+    """
+    return [
+        {'id': 1, 'name': 'ポールマッカートニー', 'role': 'vocal'},
+        {'id': 2, 'name': 'ジョンレノン', 'role': 'vocal'},
+        {'id': 3, 'name': 'リンゴスター', 'role': 'drum'},
+        {'id': 4, 'name': 'ジョージハリスン', 'role': 'guitar'},
+        {'id': 5, 'name': 'ブライアンジョーンズ', 'role': 'guitar'},
+        {'id': 6, 'name': 'イアンスチュアート', 'role': 'piano'},
+        {'id': 7, 'name': 'ミックジャガー', 'role': 'vocal'},
+        {'id': 8, 'name': 'キースリチャーズ', 'role': 'guitar'},
+    ]
+
+
+def rock_aggregator(role, with_name=False):
+    """ ロックミュージシャンの集計をして表示する関数
+    役割 role に指定されたミュージシャンの数を表示
+
+    >>> rock_aggregator('guitar')
+    3
+
+    with_name 引数が True の場合、該当したミュージシャンの名前 name も表示
+
+    >>> rock_aggregator('guitar')
+    ジョージハリスン
+    ブライアン・ジョーンズ
+    キースリチャーズ
+    """
+    logging.info("Started rock_aggregator")
+    targets = []
+    
+    logging.info("Getting musicians data")
+    data = get_data()
+    logging.info("Num of total musicians: %s", len(data))
+    
+    logging.info("Aggregating musicians data")
+    for musician in data:
+        if musician['role'] == role:
+            targets.append(musician)
+            
+    print(len(targets))
+    if with_name:
+        for target in targets:
+            print(target['name'])
+    logging.info("Ended rock_aggregator")
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="条件に応じたミュージシャンの合計人数を計算するスクリプト"
+    )
+    parser.add_argument("role", help="バンドでの役割")
+    parser.add_argument("--with-name", action="store_true",
+	                        help="該当したミュージシャンの名前も表示する場合指定")
+    args = parser.parse_args()
+    rock_aggregator(args.role, args.with_name)
+    
+
+
+
+作ってほしいもの
+
+ロックミュージシャンのデータを集計して表示するスクリプトを作ってください。
+get_data() 関数を呼び出すとデータが取得できます
+(この関数は簡略化のためそのままデータを返していますが、イメージでは別のサイトにアクセスしてデータを取得する関数です）。
+
+位置引数で「役割」を指定すると get_data() のデータから同じ role をもつミュージシャンの人数を表示してほしいです。
+
+$ python rockagg.py guitar
+3
+
+キーワード引数 --with-name が指定されたときは該当したミュージシャンの名前を表示してほしいです。
+
+$ python rockagg.py guitar --with-name
+3
+ジョージハリスン
+ブライアンジョーンズ
+キースリチャーズ
+
+argparse を使ってください
+rock_aggregator 関数に docstring も書いてください
+logging も使って、 infoログをいくつか残すようにしてください
+この条件を満たすよう、右のエディタに追記してください。
