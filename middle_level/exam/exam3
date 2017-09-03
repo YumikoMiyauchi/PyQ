@@ -1,0 +1,73 @@
+class Order:
+    AMOUNT_RE = re.compile(r'^[0-9]+$')
+    TEL_RE = re.compile(r'^[0-9]{2,4}-[0-9]{4}-[0-9]{4}$')
+                           
+    def __init__(self, item_id, amount, shipping_address, tel_number,
+                 fullname, shipping_date_str, order_file):
+        self.item_id = item_id
+        self.amount = amount
+        self.shipping_address = shipping_address
+        self.tel_number = tel_number
+        self.fullname = fullname
+        self.shipping_date_str = shipping_date_str
+        self.order_file = order_file
+
+        self.amount_int = None
+        self.shipping_date = None
+
+    def validate(self, items):
+        """ 各注文の値が正しいかバリデーションチェックする。OKの場合True、NGの場合False
+        """
+        if not items.has_id(self.item_id):
+            return False
+        if not self.AMOUNT_RE.search(self.amount):
+            return False
+        self.amount_int = int(self.amount)
+        if self.amount_int <= 0:
+            return False
+        if not self.shipping_address:
+            return False
+        if not self.TEL_RE.search(self.tel_number):
+            return False
+        if not self.fullname:
+            return False
+        try:
+            self.shipping_date = datetime.strptime(self.shipping_date_str, '%Y-%m-%d')
+        except ValueError:
+            return False
+        return True
+        
+    def row_string(self):
+        return ','.join((
+            self.item_id,
+            self.amount,
+            self.shipping_address,
+            self.tel_number,
+            self.fullname,
+            self.shipping_date_str,
+            self.order_file,
+        ))
+
+
+
+
+
+注文が正しい入力かチェックする処理 Order.validate を書きましょう。
+このメソッドは Order(...) で受け取った商品IDなど各値の正しさをチェックして、すべて正しければ True、正しくなければ False を返します。
+Order.validate メソッドは items を引数に受け取ります。
+
+各値について以下のチェックをしてください
+
+self.item_id: 引数で渡された商品マスター（items）に、この商品IDが存在する場合OK
+self.amount: 半角の1以上の整数のみOK
+self.shipping_address: 入力されていればOK
+self.tel_number: 半角の数値2 or 3 or 4桁 + "-" + 数値4桁 + "-" + 数値4桁である場合のみOK
+self.fullname: 入力されていればOK
+self.shipping_date_str: yyyy-mm-dd 形式の半角数字で有効な日付の場合OK
+すべてチェックがOKであれば Order.validate から True を返してください。
+正規表現、文字列から日時への変換など今まで学んだスキルを最大限活かしてください。
+
+もう1つ、バリデーションチェックする際に以下2つの値を設定してください。
+
+self.amount_int: self.amount を数値化した値
+self.shipping_date: self.shipping_date_str を datetime オブジェクトにした値
