@@ -1,0 +1,74 @@
+import os
+import re
+
+
+SALES_RAW_REGEX = re.compile(r'^sales_raw_(\d{4})(\d{2})(\d{2}).csv$')
+
+def main():
+    #商品マスターデータの読み込み
+    items = {}
+    with open('input/items.csv', encoding='utf-8') as items_f:
+                            for row in items_f:
+                                data = row.rstrip().split(',')
+                                item_id = data[0]
+                                name = data[1]
+                                price = data[2]
+                                items[item_id] = {
+                                    'name': name, 
+                                    'price': price}
+    
+     # 売上の生データを読み込んで、まとめる
+    # * 対象の月のデータのみ読み込み
+    # * 商品の情報を追加する
+    sales = []
+    for name in os.listdir('input/'):
+        m = SALES_RAW_REGEX.search(name)
+        if m and m.group(1) == '2016' and m.group(2) == '11':
+            with open(os.path.join('input/', name), encoding='utf-8') as f:
+                for row in f:
+                    data = row.rstrip().split(',')
+                    item_id = data[2]
+                    if item_id in items:
+                        sales.append({
+                            'purchase_id': data[0],
+                            'user_id': data[1],
+                            'item_id': item_id,
+                            'item_name': items[item_id]['name'],
+                            'item_price': items[item_id]['price'],
+                            'amount': data[3],
+                            'sold_at': data[4],
+                        })
+                        
+    #まとめた売り上げデータを書き出し
+    columns = ['purchase_id', 'user_id', 'item_id',
+               'item_name', 'item_price', 'amount', 'sold_at']
+    with open('output/sales.csv', mode='w', encoding='utf-8') as f:
+        for row in sales:
+            row_str = ','.join(str(row[column]) for column in columns)
+            f.write(row_str + '\n')
+        
+                        
+            
+    with open('output/sales.csv', mode='w', encoding='utf-8') as sales_f:
+        for name in os.listdir('input/'):
+            if name.startswith('sales_raw_') and name.endswith('.csv') \
+                    and "201611" in name:
+                with open(os.path.join('input/', name), encoding='utf-8') as f:
+                    for row in f:
+                        data = row.rstrip().split(',')
+                        item_id = data[2]
+                        if item_id in items:
+                            sales_f.write(
+                                ','.join((
+                                    data[0],
+                                    data[1],
+                                    data[2],
+                                    items[item_id]['name'],
+                                    items[item_id]['price'],
+                                    data[3],
+                                    data[4],
+                                )) + '\n'
+                            )
+
+if __name__ == "__main__":
+    main()
