@@ -1,0 +1,94 @@
+import argparse
+import random
+import string
+
+
+def password_generator(length, complex_password=False):
+    """パスワードを生成してくれる便利な関数
+    length: パスワード長
+    complex_password: 記号を含む場合True、Falseであれば文字列と、数字。
+    """
+    if complex_password:
+        candidates = string.ascii_letters + string.digits + string.punctuation
+    else:
+        candidates = string.ascii_letters + string.digits
+    return ''.join(random.choice(candidates)for _ in range(length))
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='パスワードを生成するスクリプト')
+    parser.add_argument('length', type=int, help='生成するパスワード長')
+    parser.add_argument('-c', '--complex', action='store_true',
+                       help='文字数字だけでなく記号も含める場合指定')
+    args = parser.parse_args()
+    print(password_generator(args.length, args.complex))
+    
+    
+パスワード生成してくれる便利スクリプトを作ります。
+長さの違うパスワードや、複雑度の違うパスワードを生成できるように引数を受け取るようにします。
+
+
+
+作りたいもの
+
+単純に毎回同じ長さ、複雑さだと面白くないので、コマンドラインから指定できるようにしましょう。
+
+長さを指定：
+
+$ python passgen.py 16
+sfl25tg40fQYCL0Z
+
+--complex か -c を指定して複雑なパスワード（文字、数字、記号含む）にする：
+
+$ python3 passgen.py 8 --complex
+%Kiuk(BG
+
+--help か -h を指定してヘルプ表示：
+
+$ python passgen.py --help
+usage: passgen.py [-h] [-c] length
+
+positional arguments:
+  length         生成するパスワード長
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -c, --complex  文字数字だけでなく記号も含める場合指定
+
+これが argparse を使うととても簡単に作れます。
+ターミナル を開いて、「作りたいもの」に書いてあるコマンドを実行して動作するかも確認すると良いでしょう。
+
+
+
+解説
+
+if __name__ == '__main__': 以下の parser.add_argument している部分が引数を追加している部分です。
+
+
+位置引数の追加
+
+.add_argument('length') のように単に名前をつけて指定すると位置引数として登録できます。
+位置引数は必須の値になります。スクリプトを実行するときは、必ず長さを passgen.py 12 のように指定します。
+
+
+オプション引数の追加
+
+.add_argument('--complex') のように -- をつけて引数名を指定するとオプション引数として登録できます。
+この場合 --complex は指定してもしなくてもスクリプトを実行できます。
+複数指定することもできるので '-c', '--complex' のように、省略版もつけておくと便利です。
+
+ヘルプを表示する -h --help は自動で追加されるので別途していする必要はありません。
+
+
+それぞれのオプション
+
+help: ヘルプを表示したときに使われる、引数の説明です
+type: 受け取った値をどの型として使うかを指定します。デフォルトで文字列 str です。
+action: 引数が指定された場合どういう処理をするかを指定します。たとえば "store_true" と指定すると、
+引数がある場合 True が返るようになります
+引数で指定された値を使う
+
+parser.parse_args() 関数の返り値 (ここでは args）に args.length や args.complex のように
+引数の値が入っているので、そのまま取り出して使います。
+たとえば python passgen.py 16 --complex で呼ばれた場合、 args.length には 16 が、 args.complex には
+True が入っています。
