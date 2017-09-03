@@ -1,0 +1,64 @@
+from daterange import now_to
+import unittest
+from unittest import mock
+from datetime import datetime
+
+class TestNowTo(unittest.TestCase):
+    @mock.patch('daterange.get_now')
+    def test_per_an_hour(self, m):
+        m.return_value = datetime(2000, 11, 5, 23, 0, 0)
+
+        g = now_to()
+        self.assertEqual(next(g), datetime(2000, 11, 5, 23, 0, 0))
+        self.assertEqual(next(g), datetime(2000, 11, 6, 0, 0, 0))
+        self.assertEqual(next(g), datetime(2000, 11, 6, 1, 0, 0))
+
+    @mock.patch('daterange.get_now')
+    def test_per_4hours(self, m):
+        m.return_value = datetime(2000, 11, 5, 23, 0, 0)
+
+        g = now_to(4)
+        self.assertEqual(next(g), datetime(2000, 11, 5, 23, 0, 0))
+        self.assertEqual(next(g), datetime(2000, 11, 6, 3, 0, 0))
+        self.assertEqual(next(g), datetime(2000, 11, 6, 7, 0, 0))
+        
+        
+       
+##################daterange.py########################
+from datetime import datetime, timedelta
+
+
+def get_now():
+    return datetime.now()
+
+
+def now_to(hours=1):
+    """ 現在時刻から後の時刻を1時間刻みに返すジェネレーター。時間は hours に指定できる。
+
+    >>> g = now_to()
+    >>> next(g)
+    datetime(2015, 8, 1, 12, 32, 00)
+    >>> next(g)
+    datetime(2015, 8, 1, 13, 32, 00)
+    >>> next(g)
+    datetime(2015, 8, 1, 14, 32, 00)
+    ...
+    """
+    now = get_now()
+    while True:
+        yield now
+        now += timedelta(hours=hours)
+
+
+
+
+
+
+実際に mock を使ったテストを書いてみましょう。
+daterange.py ファイル内の now_to 関数のテストを test_daterange.py に完成させてください。
+
+ただし、 datetime.now や daterange.datetime.now はパッチできないので 'daterange.get_now' をパッチしてください。
+組み込みの型のdatetime は、それの属性やメソッドを置き換えれないんです。
+datetime.now は datetime.datetime クラスに紐づく now クラスメソッドなので、置き換えできません。
+
+now_to 関数の中に直接 now = datetime.now() と書かずに、テストをやりやすくするために get_now 関数を作り、 now = get_now() と書いてパッチする方法が一般的です。
