@@ -1,0 +1,61 @@
+今まではプログラムをキレイに再設計して、仕様を追加していました。
+ここで「対象の年月を変えるのに毎回プログラムを変更するのが面倒でミスも多い」という要望をもらいました。
+
+たしかに現状では main.py の target_year と target_month を変更する必要があります。
+以下のように、プログラムの引数として渡せるようにしましょう。
+
+$ python main.py 2017 11
+
+argparse を使って引数として処理対象の年、月を受け取れるようにしましょう。
+
+
+
+毎回プログラム中の target_year 変数と target_month 変数に代入するを変更しなくて良いように、利用する値をコマンドの引数として受け取れるようにしました。
+まず argparse.ArgumentParser を作り、 parser.add_argument(...) から受け取る引数を追加します。
+
+import argparse
+
+parser = argparse.ArgumentParser(
+    description="商品のマスターデータと売上生データを読み込んで、売上データを作成するコマンド"
+)
+parser.add_argument('year', help="売上生データ取り込み対象年", type=int)
+parser.add_argument('month', help="売上生データ取り込み対象月", type=int)
+
+.add_argument(...) の意味:
+
+'year': 1つ目の引数の名前をyearとする
+help="...": この引数の使い方や意味の説明
+type=int: 受け取る引数が int（数字）であると指定
+parser.parse_args() とした結果、ターミナルで渡された引数を解釈して返します。
+parser.add_argument(...) で 'year' という名前で指定しているので args.year で数字が取れます。
+
+
+
+たとえば以下のようにターミナルから実行した場合
+
+$ python main.py 2017 11
+
+2017 や 11 という数字がとれます。
+
+args = parser.parse_args()
+args.year  # 2017 という数字
+args.month  # 11 という数字
+
+このコマンドから受け取った数字を target_year と target_month の代わりに使うことで、ターミナルから指定された対象年月の売上生データを対象に処理ができます。
+
+sales_raw = read_sales_raw(args.year, args.month)
+
+どの値をターミナルから指定できるようにすべきか
+
+今回は target_year、target_month の値を引数から受け取れるようにしました。
+他の 'input/items.csv' のような値はコマンドから受け取れるようにすべきでしょうか？
+
+これはこのPythonプログラムをどういう使い方をすべきかによりますが、実行ごとに変更したい値を引数から受け取るようにすると良いでしょう。
+たとえばこの「売上生データ => 売上データ」変換の処理は毎月実行されてもおかしくはなさそうなので、処理対象の年月は引数から受け取れるようにしています。
+
+ですが、商品マスターデータへのファイルパスなどは毎回同じで問題なさそうなので引数から受け取らないようにしています。
+もし商品マスターデータへのファイルパスも指定できるようにしたい場合は、デフォルト値ありで引数を取るようにすると良いでしょう。
+
+デフォルト値を引数に用意したい場合は、 add_argument の default= から指定できます。
+
+parser.add_argument('items', default='./input/items.csv')
