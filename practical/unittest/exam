@@ -1,0 +1,77 @@
+from accounting import past_days_accounting
+import unittest
+import tempfile
+from unittest import mock
+from datetime import datetime
+
+
+class TestPastDaysAccounting(unittest.TestCase):
+    @mock.patch('accounting.get_now')
+    def test_accounting(self, m):
+        m.return_value = datetime(2014, 11, 5, 18, 0, 0)
+        
+        
+        with tempfile.NamedTemporaryFile(mode='w') as f:
+            f.write("""20141105,ホッチキス,500
+20141104,ハサミ,100
+20141104,ノリ,50
+20141103,Pythonの本,3000
+20141102,ディスプレイ,20000
+""")
+            f.flush()
+            
+            actual = past_days_accounting(f.name, days=3)
+            self.assertEqual(actual, 3650)
+        
+
+
+
+#########acounting.py########
+import csv
+from datetime import datetime, timedelta
+
+
+def get_now():  # pragma:nocover (カバレッジ対象外の指定)
+    return datetime.now()
+
+
+class Purchase:
+    def __init__(self, bought_datetime, purchase_detail, amount):
+        self.bought_datetime = bought_datetime
+        self.purchase_detail = purchase_detail
+        self.amount = amount
+
+
+def load_accounting_file(filepath):
+    """ 会計ログCSVファイル filepath を読み込んで
+    Purchase クラスのリストで返す
+
+    CSVの各行の形式は `購入日,購入したものの名前,金額` 。
+
+    * 購入日: `YYYYmmdd` 形式の日。
+    * 内容: 文字列
+    * 金額: 数値
+    """
+    purchases = []
+    with open(filepath, encoding='utf-8') as f:
+        for row in csv.reader(f):
+            bought_date_str, purchase_detail, amount = row
+            bought_datetime = datetime.strptime(bought_date_str, '%Y%m%d')
+            amount = int(amount)
+            purchases.append(Purchase(bought_datetime, purchase_detail, amount))
+    return purchases
+
+
+def past_days_accounting(filepath, days=3):
+    """
+    会計ログファイル filepath から過去 days 日間前に
+    購入したものの合計金額を算出する
+    """
+    to_datetime = get_now()
+    from_datetime = to_datetime - timedelta(days=days)
+    purchases = load_accounting_file(filepath)
+    total = 0
+    for purchase in purchases:
+        if from_datetime <= purchase.bought_datetime < to_datetime:
+            total += purchase.amount
+    return total
