@@ -1,0 +1,99 @@
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
+
+
+def get_data():
+    """ ファイルなどからデータを取得する関数の、つもり
+    """
+    return [
+        {'id': 1},
+        {'id': 2},
+        {'id': 3},
+    ]
+
+
+def main():
+    """ まとめてデータを処理する関数の、つもり
+    """
+    logging.info("Started main")
+    
+    try:
+        data = get_data()
+    except IOError as e:
+        logging.error("Failed to load data: %s", e)
+        return
+    
+    logging.info("Data has %s lines", len(data))
+
+    for d in data:
+        print(d)
+        
+    logging.info("Ended main")
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+Pythonの標準ライブラリ logging を使ってみましょう。
+logging はログを出力するためのライブラリで、プログラムのトレーサビリティ（追跡可能性）が高まります。
+プログラムを書いている際に print() を使って変数の値などを表示したことはありませんか？そういった場合は logging を使うほうがオススメです。
+logging を使うとログの「レベル（緊急度）」によって出力先を変えたりできるので便利です。
+
+エディタ上のコードで logging を使うように変えてみましょう
+
+
+
+実行したときに INFO:root:Started main のような文字が表示されましたか？
+これが logging から出力された文字です。
+
+
+ログのメッセージを書く
+
+下のようにログのメッセージ（= ここで伝えておきたいこと）を書けます。
+この場合ログのレベルは INFO（情報）です。
+
+logging.info("<some message here>")
+
+
+ログレベル
+
+logging.info だけでなく、いくつか緊急度に応じてログ出力の方法を変えれます。
+
+logging.error("Failed to load data")
+
+これで「エラー ERROR」のログレベルをもつログを出力できます。
+次の問題で詳しく紹介しますが、ログレベルを使って出力先を制御することで「infoは画面表示だけして、errorはファイルにも出力しておく」のような制御ができます。
+
+
+代表的なログレベルにはこの4つです。
+
+debug: デバッグ用。開発者が読むためだけのものです
+info: 何らかの情報を伝えたいときに使います
+      全体の処理の開始時、終了時
+      処理の区切りごとの開始時、終了時（データ読み込み開始、終了。処理開始、終了。など）
+      操作対象のデータ量（実は0件で意味のない操作だった、など気づけます）
+      処理の長いスクリプトや、自動で夜中に実行するスクリプトでちゃんと用意しておくと後で助かります
+warning: 動作は続けられるけど後々の対処が必要な問題を伝えるのに使います
+error: 動作が続けられない、機能上のエラーがあった場合に使います
+       変数を渡す
+
+ログのメッセージに変数を渡すには第2引数以降に渡します。
+メッセージ内の変数を埋め込みたいところに %s と書きます。
+
+logging.info("message %s", 24)
+
+場合によってログのメッセージ（ここでは message %s）を使って集計をします。
+そのときに「どこまでが同じログで、どこまでが変数なのか」が分かるように logging にはメッセージと変数を分けて渡します。
+
+
+
+basicConfig
+
+ロギングの設定をするために logging.basicConfig(...) を呼び出しています。
+basicConfig を使うと最低限 logging を使うのに必要な設定をしてくれます。
+ここでは追加で level=logging.INFO を渡して、 info以上のログを出力するようにしています（デフォルトではerror以上）。
