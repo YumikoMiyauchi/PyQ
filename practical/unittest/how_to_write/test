@@ -1,0 +1,30 @@
+import unittest
+
+
+from converter import list_to_dict
+
+
+class TestListToDict(unittest.TestCase):
+    def test__default_key(self):
+        """デフォルトの、idの値をキーにする場合
+        """
+        actual = list_to_dict(
+        [{'id':1,'name':'ロッシ'},
+         {'id':2,'name':'マルクス'},
+         {'id':3,'name':'ロレンソ'}]
+        )
+        self.assertEqual(actual,{
+        1:{'id':1,'name':'ロッシ'},
+        2:{'id':2,'name':'マルクス'},
+        3:{'id':3,'name':'ロレンソ'}
+        })
+        
+    
+    
+    test_ で始めるPythonファイルにテストを書く
+unittest.TestCase を継承したクラスを作る
+クラスの各メソッドは def test_ で始めて、その中で動作確認する
+確認には self.assertEqual を使って、期待した値と比較する
+unittest.TestCase クラスはPythonが標準で提供するクラスで、各 test_... メソッドにテストの内容を書けます。
+このメソッド内では self.assertEqual などの比較用のメソッドが使えるので
+self.assertEqual(actual, 3)（actual変数の値は3であるか）のように確認します。
