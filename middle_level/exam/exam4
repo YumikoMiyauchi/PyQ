@@ -1,0 +1,42 @@
+def write_deliver_orders(orders):
+    """ Orderのリストを受け取って日別注文ファイルに書き込み
+    """
+    # 宅配日毎に集計。ファイルをオープンする回数を減らすため事前にまとめる
+    date_orders = {}
+    for order in orders:
+        if order.shipping_date in date_orders:
+            date_orders[order.shipping_date].append(order)
+        else:
+            date_orders[order.shipping_date] = [order]
+
+    for d, day_orders in date_orders.items():
+        filename = 'delivery_{}.csv'.format(d.strftime('%Y%m%d'))
+        filepath = os.path.join(DELIVERY_DIR, filename)
+        with open(filepath, 'a', encoding='utf-8') as f:
+            for order in day_orders:
+                f.write(order.row_string() + '\n')
+
+
+def write_failure_orders(orders, order_date):
+    """ Orderのリストを受け取って注文受付失敗ファイルに書き込み
+    """
+    str_date = order_date.strftime('%Y%m%d')
+    new_name = 'failure_{}.csv'.format(str_date)
+    file_path = os.path.join(FAILURE_DIR, new_name)
+    with open(file_path, 'a', encoding='utf-8') as f:
+        for order in orders:        
+            f.write(order.row_string()+'\n')
+
+
+
+最後に注文受付失敗ファイルを書きだす write_failure_orders 関数を作ってください。
+この関数は引数にバリデーションが失敗した Order のリスト orders と、処理実行の日付 order_date を受け取ります。
+ファイル書き出すときは order.row_string() を使うと Order オブジェクト1つに対応する1行が取得できます。
+
+処理は以下のようになります。
+
+引数 order_date から failure_YYYYmmdd.csv ファイル名を作成
+このファイルを FAILURE_DIR 以下に作成
+ファイルを開くときは「追記モード」で開いてください
+引数 orders から1つずつ取り出して、ファイルに order.row_string() を書き込み
+1行書き込むとき末尾に改行をつけるのを忘れないでください
