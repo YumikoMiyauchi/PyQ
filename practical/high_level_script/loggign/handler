@@ -1,0 +1,64 @@
+import logging
+
+# コンソールに表示するのは INFO レベル以上。
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+
+# ファイルに出力するのは ERROR レベル以上。
+file_handler = logging.FileHandler('./logs/script.log')
+file_handler.setLevel(logging.ERROR)
+
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[stream_handler, file_handler])
+
+def get_data():
+    """ ファイルなどからデータを取得する関数の、つもり
+    """
+    raise IOError("ダミーのエラー")
+
+
+def main():
+    """ まとめてデータを処理する関数の、つもり
+    """
+    logging.info("Started main")
+
+    try:
+        data = get_data()
+    except IOError as e:
+        logging.error("Failed to load data: %s", e)
+        return
+
+    logging.info("Data has %s lines", len(data))
+
+    for d in data:
+        print(d)
+
+    logging.info("Ended main")
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+ロギングに「ハンドラ」の設定をしましょう。
+ハンドラは出力されたログを、どこに送るのかを決めるものです。
+たとえば「画面（コンソール）に表示」「ファイルに出力」など、他にもさまざまです。
+
+下のコードを参考に、エディタ上にロギングの設定を追記してください。
+今回は get_data 関数はエラーを起こすようにしているので、実行はエラーになります。
+
+
+ハンドラ
+
+ここでは「画面（コンソール）に表示」StreamHandler と
+「ファイルに出力」FileHandler のハンドラを作り、 basicConfig で設定しています。
+
+stream_handler.setLevel(logging.INFO) のように setLevel を呼んで、そのハンドラをが受け取る「最低のログレベル」を設定できます。
+logging.INFO を指定した場合はinfo, warning, errorのログが含まれるので、これらのログの場合に画面に表示されます。
+file_handler には logging.ERROR を指定しているので、 logging.error(...) の内容だけがファイル出力されます。
+
+basicConfig に指定する level= は logging.info などロガー側で最低限受け取るレベルのログです。
+ここを level=logging.ERROR にすると、ハンドラ側でinfoログを許可していても出力されなくなります。
